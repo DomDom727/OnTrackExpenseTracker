@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="12dp"
+    android:gravity="center_vertical"
+    android:elevation="2dp">
+
+    <!-- Transaction Info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTransactionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Starbucks"
+            android:textSize="16sp"
+            android:textColor="#111111"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvTransactionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jun 6 18:27"
+            android:textSize="12sp"
+            android:textColor="#888888" />
+    </LinearLayout>
+
+    <!-- Vertical Divider -->
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="#00D5A3" />
+
+    <!-- Transaction Type -->
+    <TextView
+        android:id="@+id/tvTransactionType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Food"
+        android:textStyle="bold"
+        android:textColor="#D82C2C"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Details Button -->
+    <Button
+        android:id="@+id/btnDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Details"
+        android:backgroundTint="#00D5A3"
+        android:textColor="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:background="@drawable/rounded_button" />
+</LinearLayout>
