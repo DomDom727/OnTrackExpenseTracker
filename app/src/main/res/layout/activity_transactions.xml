@@ -21,12 +21,12 @@
         android:id="@+id/title_tv"
         android:layout_width="193dp"
         android:layout_height="36dp"
+        android:layout_marginTop="32dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Transactions"
         android:textColor="#00D5A3"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +34,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="529dp"
+        android:layout_height="625dp"
         android:layout_margin="12dp"
         android:elevation="8dp"
         app:cardBackgroundColor="@color/card_background"
