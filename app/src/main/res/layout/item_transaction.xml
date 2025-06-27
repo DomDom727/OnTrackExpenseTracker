@@ -1,63 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="12dp"
-    android:background="@android:color/white"
-    android:layout_marginBottom="12dp"
-    android:gravity="center_vertical"
-    android:elevation="2dp">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardElevation="1dp"
+        app:cardMaxElevation="1dp">
 
-        <TextView
-            android:id="@+id/tvTransactionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Starbucks"
-            android:textSize="16sp"
-            android:textColor="#111111"
-            android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvTransactionDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jun 6 18:27"
-            android:textSize="12sp"
-            android:textColor="#888888" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/transactionItem"
+                android:layout_width="169dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:text="Starbucks"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Vertical Divider -->
-    <View
-        android:layout_width="1dp"
-        android:layout_height="40dp"
-        android:layout_marginHorizontal="8dp"
-        android:background="#00D5A3" />
+            <TextView
+                android:id="@+id/transactionItem2"
+                android:layout_width="81dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Food"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/divider"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Transaction Type -->
-    <TextView
-        android:id="@+id/tvTransactionType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Food"
-        android:textStyle="bold"
-        android:textColor="#D82C2C"
-        android:layout_marginEnd="12dp" />
+            <TextView
+                android:id="@+id/transaction_datetime_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="6/27/2025"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/transactionItem" />
 
-    <!-- Details Button -->
-    <Button
-        android:id="@+id/btnDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Details"
-        android:backgroundTint="#00D5A3"
-        android:textColor="#FFFFFF"
-        android:paddingHorizontal="16dp"
-        />
+            <View
+                android:id="@+id/divider"
+                android:layout_width="1dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/transactionItem"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="1dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/transactionItem2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/green_text_color"
+                android:text="Details"
+                android:textSize="6sp"
+                app:layout_constraintStart_toEndOf="@+id/divider2"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>
