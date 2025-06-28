@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
@@ -18,8 +18,8 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/transactionItem"
-                android:layout_width="169dp"
+                android:id="@+id/transaction_name"
+                android:layout_width="145dp"
                 android:layout_height="23dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/transactionItem2"
+                android:id="@+id/transaction_category"
                 android:layout_width="81dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="16dp"
@@ -40,52 +40,32 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/divider"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/transaction_datetime_tv"
+                android:id="@+id/transaction_datetime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:text="6/27/2025"
                 android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/transactionItem" />
+                app:layout_constraintTop_toBottomOf="@+id/transaction_name" />
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="1dp"
                 android:layout_height="35dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="64dp"
                 android:layout_weight="1"
                 android:background="?android:attr/listDivider"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/transactionItem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="1dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/transactionItem2"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:background="@color/green_text_color"
-                android:text="Details"
-                android:textSize="6sp"
-                app:layout_constraintStart_toEndOf="@+id/divider2"
-                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
