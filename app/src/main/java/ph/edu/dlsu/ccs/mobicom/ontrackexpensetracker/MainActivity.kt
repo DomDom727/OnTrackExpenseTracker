@@ -2,6 +2,7 @@ package ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -32,6 +33,12 @@ class MainActivity : ComponentActivity() {
         val insightsCardView: CardView = findViewById(R.id.cardView4)
         insightsCardView.setOnClickListener {
             val intent = Intent(this, InsightsActivity::class.java)
+            startActivity(intent)
+        }
+
+        val cameraButton: Button = findViewById(R.id.camera_btn)
+        cameraButton.setOnClickListener {
+            val intent = Intent(this, TakePhotoActivity::class.java)
             startActivity(intent)
         }
     }

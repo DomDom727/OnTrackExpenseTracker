@@ -1,6 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/main_background"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/back_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/baseline_arrow_back_24"
+        app:layout_constraintEnd_toStartOf="@+id/scan_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/scan_tv"
+        android:layout_width="193dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="28dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Scan"
+        android:textColor="#00D5A3"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/scan_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="24dp"
+        android:elevation="8dp"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="8dp"
+        app:cardMaxElevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scan_tv">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/camera_cardView"
+                android:layout_width="310dp"
+                android:layout_height="0dp"
+                android:layout_margin="24dp"
+                android:elevation="8dp"
+                app:cardBackgroundColor="@color/material_dynamic_neutral50"
+                app:cardCornerRadius="32dp"
+                app:cardElevation="8dp"
+                app:cardMaxElevation="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/takePhoto_btn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/takePhoto_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/filled_camera_custom"
+                android:elevation="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
