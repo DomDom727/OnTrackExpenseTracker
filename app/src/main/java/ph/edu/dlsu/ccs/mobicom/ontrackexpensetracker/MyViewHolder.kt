@@ -15,7 +15,7 @@ class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bindData(expense: Expense) {
         transactionName.text = expense.name
-        transactionCategory.text = expense.category
+        transactionCategory.text = expense.amount.toString()
         transactionDateTime.text = expense.dateTime.toString()
     }
 }
