@@ -28,5 +28,11 @@ class MainActivity : ComponentActivity() {
             val intent = Intent(this, TransactionsActivity::class.java)
             startActivity(intent)
         }
+
+        val insightsCardView: CardView = findViewById(R.id.cardView4)
+        insightsCardView.setOnClickListener {
+            val intent = Intent(this, InsightsActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

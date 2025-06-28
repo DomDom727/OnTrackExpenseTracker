@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/budget_cardView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="24dp"
