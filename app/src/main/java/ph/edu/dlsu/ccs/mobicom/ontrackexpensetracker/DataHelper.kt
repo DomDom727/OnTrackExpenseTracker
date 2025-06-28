@@ -17,7 +17,7 @@ class DataHelper {
             "Other" to listOf("Donation", "Pet Food", "Household Repair")
         )
 
-        fun generateData(count: Int = 10): ArrayList<Expense> {
+        fun generateData(count: Int = 20): ArrayList<Expense> {
             val data = ArrayList<Expense>()
             val random = Random(System.currentTimeMillis())
             val now = System.currentTimeMillis()

@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 class ViewTransactionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_insights)
+        setContentView(R.layout.activity_view_transaction)
 
         val backButton: Button = findViewById(R.id.back_btn)
         backButton.setOnClickListener {

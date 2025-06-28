@@ -41,5 +41,11 @@ class MainActivity : ComponentActivity() {
             val intent = Intent(this, TakePhotoActivity::class.java)
             startActivity(intent)
         }
+
+        val addTransactionButton: Button = findViewById(R.id.newtransaction_btn)
+        addTransactionButton.setOnClickListener {
+            val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

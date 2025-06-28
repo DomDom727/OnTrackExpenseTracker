@@ -1,5 +1,6 @@
 package ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.ComponentActivity
@@ -16,5 +17,13 @@ class TakePhotoActivity : ComponentActivity() {
             //finish()
             onBackPressedDispatcher.onBackPressed()
         }
+
+        val addTransactionButton: Button = findViewById(R.id.takePhoto_btn)
+        addTransactionButton.setOnClickListener {
+            val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 }
