@@ -1,3 +1,12 @@
+/*
+MOBICOM MCO - OnTrack Expense Tracker
+Members:
+Clemente, Daniel Gavrie (S18)
+Feliciano, Jan Robee (S18)
+Roque, Dominic Angelo (S17)
+Valdellon, Derrick (S18)
+*/
+
 package ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker
 
 import android.content.Intent
