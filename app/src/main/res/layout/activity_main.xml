@@ -195,6 +195,7 @@
         android:layout_height="52dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/outline_person_24"
+        android:contentDescription="Profile"
         app:layout_constraintEnd_toStartOf="@+id/welcome_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -205,6 +206,7 @@
         android:layout_height="52dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/baseline_add_circle_outline_24"
+        android:contentDescription="Add Expense"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/welcome_tv"
         app:layout_constraintTop_toTopOf="parent" />
@@ -215,6 +217,7 @@
         android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/filled_camera_custom"
+        android:contentDescription="Camera"
         android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

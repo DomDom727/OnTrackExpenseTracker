@@ -13,6 +13,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/baseline_arrow_back_24"
+        android:contentDescription="back button"
         app:layout_constraintEnd_toStartOf="@+id/title_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -59,6 +60,7 @@
                 android:layout_height="40dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/baseline_edit_24"
+                android:contentDescription="Edit Expense"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

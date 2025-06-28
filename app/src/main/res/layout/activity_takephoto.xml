@@ -13,6 +13,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/baseline_arrow_back_24"
+        android:contentDescription="Back Button"
         app:layout_constraintEnd_toStartOf="@+id/scan_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -73,6 +74,7 @@
                 android:layout_height="70dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/filled_camera_custom"
+                android:contentDescription="take Photo Button"
                 android:elevation="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

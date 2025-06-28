@@ -13,6 +13,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/baseline_arrow_back_24"
+        android:contentDescription="Back Button"
         app:layout_constraintEnd_toStartOf="@+id/title_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -59,6 +60,8 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="21dp"
                 android:background="@drawable/filled_camera_custom"
+                android:contentDescription="Scan Picture of Reciept"
+                android:textColor="@android:color/transparent"
                 app:layout_constraintStart_toEndOf="@+id/parameter6"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -148,11 +151,14 @@
 
             <Button
                 android:id="@+id/add_btn"
-                android:layout_width="60dp"
+                android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="24dp"
-                android:background="@drawable/baseline_add_circle_outline_24"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/green_text_color"
+                android:contentDescription="Add expense"
+                android:text="SAVE"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -223,6 +229,7 @@
                 android:layout_marginBottom="16dp"
                 android:ems="10"
                 android:gravity="start|top"
+                android:hint="additional notes"
                 android:inputType="textMultiLine"
                 app:layout_constraintBottom_toTopOf="@+id/add_btn"
                 app:layout_constraintEnd_toEndOf="parent"
