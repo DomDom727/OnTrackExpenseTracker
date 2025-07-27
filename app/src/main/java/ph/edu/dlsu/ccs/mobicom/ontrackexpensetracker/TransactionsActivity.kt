@@ -21,7 +21,8 @@ class TransactionsActivity : ComponentActivity() {
         // viewBinding = ActivityTransactionsBinding.inflate(layoutInflater)
         // setContentView(viewBinding.root)
 
-        this.data = DataHelper.generateData()
+        val expenseDatabase = ExpenseDatabase(applicationContext)
+        this.data = expenseDatabase.getExpenses()
         this.myAdapter = MyAdapter(this.data)
         this.recyclerView = findViewById(R.id.recyclerView)
         this.recyclerView.adapter = this.myAdapter
