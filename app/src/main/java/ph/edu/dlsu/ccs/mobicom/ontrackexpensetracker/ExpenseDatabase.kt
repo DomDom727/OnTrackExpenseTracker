@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteException
+import android.util.Log
 
 class ExpenseDatabase(context: Context) {
     private lateinit var databaseHandler : DatabaseHandler
@@ -98,5 +99,49 @@ class ExpenseDatabase(context: Context) {
         return result
     }
 
+    fun getExpenseId(id: Int): Expense? {
+        val db = databaseHandler.readableDatabase
+        var cursor: Cursor? = null
+        var expense: Expense? = null
+
+        try{
+            val projection = arrayOf(
+                DatabaseHandler.ID,
+                DatabaseHandler.NAME,
+                DatabaseHandler.AMOUNT,
+                DatabaseHandler.CATEGORY,
+                DatabaseHandler.DATE_TIME,
+                DatabaseHandler.PHOTO_PATH
+            )
+            val selection = "${DatabaseHandler.ID} = ?"
+            val selectionArgs = arrayOf(id.toString())
+
+            cursor = db.query(
+                DatabaseHandler.TRANSACTION_TABLE,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+            )
+
+            if (cursor.moveToFirst()) {
+                val expenseId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHandler.ID))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHandler.NAME))
+                val amount = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHandler.AMOUNT))
+                val category = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHandler.CATEGORY))
+                val dateTime = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHandler.DATE_TIME))
+
+                expense = Expense(expenseId, name, amount, category, dateTime)
+            }
+        } catch (e: SQLiteException) {
+            Log.e("DatabaseHandler", "Error getting expense by ID: ${e.message}")
+        } finally {
+            cursor?.close()
+            db.close()
+        }
+        return expense
+    }
 
 }

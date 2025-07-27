@@ -9,6 +9,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class ViewTransactionActivity : ComponentActivity() {
+
+    companion object {
+        const val EXTRA_EXPENSE_ID = "extra_expense_id"
+    }
+    private lateinit var expenseDatabase: ExpenseDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_transaction)

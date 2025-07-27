@@ -90,10 +90,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/category_tv" />
 
             <TextView
-                android:id="@+id/category_tv2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/categoryValue_tv"
+                android:layout_width="116dp"
+                android:layout_height="27dp"
                 android:layout_marginTop="100dp"
+                android:gravity="center_horizontal"
                 android:text="Food"
                 android:textColor="@color/black"
                 android:textSize="20sp"

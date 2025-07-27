@@ -164,7 +164,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/editTextName"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
@@ -179,7 +179,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/parameter6" />
 
             <EditText
-                android:id="@+id/editTextText5"
+                android:id="@+id/editTextAmount"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
@@ -190,10 +190,10 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/parameter2"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
             <EditText
-                android:id="@+id/editTextText6"
+                android:id="@+id/editTextCategory"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
@@ -204,10 +204,10 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/parameter3"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText5" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextAmount" />
 
             <EditText
-                android:id="@+id/editTextText7"
+                android:id="@+id/editTextDate"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
@@ -218,7 +218,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/parameter4"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText6" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextCategory" />
 
             <EditText
                 android:id="@+id/editTextTextMultiLine2"
