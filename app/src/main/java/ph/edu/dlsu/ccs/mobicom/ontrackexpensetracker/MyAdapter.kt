@@ -20,14 +20,12 @@ class MyAdapter(private val data: List<Expense>) : RecyclerView.Adapter<MyViewHo
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bindData(data[position])
-        holder.itemView.tag = data[position]
+        val currentExpense = data[position]
+        holder.bindData(currentExpense)
+        //holder.itemView.tag = data[position]
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ViewTransactionActivity::class.java)
-            intent.putExtra(nameKey, data[position].name)
-            intent.putExtra(categoryKey, data[position].category)
-            intent.putExtra(dateTimeKey, data[position].dateTime)
-            intent.putExtra(positionKey, position)
+            intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_ID, currentExpense.id)
             holder.itemView.context.startActivity(intent)
         }
     }

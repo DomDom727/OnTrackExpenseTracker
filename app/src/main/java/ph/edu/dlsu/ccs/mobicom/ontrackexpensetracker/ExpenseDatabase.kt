@@ -99,7 +99,7 @@ class ExpenseDatabase(context: Context) {
         return result
     }
 
-    fun getExpenseId(id: Int): Expense? {
+    fun getExpenseFromId(id: Int): Expense? {
         val db = databaseHandler.readableDatabase
         var cursor: Cursor? = null
         var expense: Expense? = null
@@ -126,7 +126,7 @@ class ExpenseDatabase(context: Context) {
                 null
             )
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 val expenseId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHandler.ID))
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHandler.NAME))
                 val amount = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHandler.AMOUNT))
