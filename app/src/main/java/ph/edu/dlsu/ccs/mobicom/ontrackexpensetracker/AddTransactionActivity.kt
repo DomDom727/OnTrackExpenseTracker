@@ -1,21 +1,28 @@
 package ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.ui.geometry.isEmpty
 import androidx.compose.ui.semantics.error
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.text.toDoubleOrNull
 
-class AddTransactionActivity : ComponentActivity() {
+class AddTransactionActivity : ComponentActivity(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var nameEditText: EditText
     private lateinit var amountEditText: EditText
@@ -23,6 +30,9 @@ class AddTransactionActivity : ComponentActivity() {
     private lateinit var dateEditText: EditText
 
     private lateinit var expenseDatabase: ExpenseDatabase
+
+    private val calendar = Calendar.getInstance()
+    private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +62,28 @@ class AddTransactionActivity : ComponentActivity() {
             startActivity(intent)
             finish()
         }
+
+        findViewById<EditText>(R.id.editTextDate).setOnClickListener {
+            android.app.DatePickerDialog(this,
+                this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+
+        }
     }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        Log.e("Calender", "$year/$month/$dayOfMonth")
+        calendar.set(year, month, dayOfMonth)
+        setDateTime(calendar.timeInMillis)
+    }
+
+    private fun setDateTime(timestamp: Long) {
+        findViewById<EditText>(R.id.editTextDate).setText(formatter.format(timestamp))
+    }
+
     private fun AddTransactionAndProceed() {
         val name = nameEditText.text.toString().trim()
         val amountStr = amountEditText.text.toString().trim()
@@ -103,4 +134,6 @@ class AddTransactionActivity : ComponentActivity() {
             Toast.makeText(this, "Failed to add expense", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 }

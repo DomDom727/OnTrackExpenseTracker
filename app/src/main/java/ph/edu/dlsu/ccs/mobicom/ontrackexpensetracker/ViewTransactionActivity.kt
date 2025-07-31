@@ -35,41 +35,29 @@ class ViewTransactionActivity : ComponentActivity() {
         setContentView(R.layout.activity_view_transaction)
 
         expenseDatabase = ExpenseDatabase(applicationContext)
-        nameTextView = findViewById(R.id.expense_name_tv)
-        amountTextView = findViewById(R.id.amount_tv)
-        dateTextView = findViewById(R.id.dateTime_tv)
-        categoryTextView = findViewById(R.id.categoryValue_tv)
+        // nameTextView = findViewById(R.id.expense_name_tv)
+        // amountTextView = findViewById(R.id.amount_tv)
+        // dateTextView = findViewById(R.id.dateTime_tv)
+        // categoryTextView = findViewById(R.id.categoryValue_tv)
 
         val expenseId = intent.getLongExtra(EXTRA_EXPENSE_ID, -1L)
         val expense = expenseDatabase.getExpenseFromId(expenseId.toInt())
 
-        loadExpenseDetails(expense)
+        val name = expense?.name
+        val amount = expense?.amount
+        val date = expense?.dateTime
+        val category = expense?.category
+
+        findViewById<TextView>(R.id.expense_name_tv).setText(name)
+        findViewById<TextView>(R.id.amount_tv).setText(amount.toString())
+        findViewById<TextView>(R.id.dateTime_tv).setText(date)
+        findViewById<TextView>(R.id.categoryValue_tv).setText(category)
 
 
         val backButton: Button = findViewById(R.id.back_btn)
         backButton.setOnClickListener {
             //finish()
             onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
-    private fun loadExpenseDetails(expense: Expense?) {
-        GlobalScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) {
-                expense?.let {
-                    nameTextView.text = it.name
-                    amountTextView.text = it.amount.toString()
-                    dateTextView.text = it.dateTime
-                    categoryTextView.text = it.category
-                    // notesTextView.text = it.notes
-                } ?: run {
-                    nameTextView.text = "Expense details not found."
-                    amountTextView.text = ""
-                    dateTextView.text = ""
-                    categoryTextView.text = ""
-                    //notesTextView.text = ""
-                }
-            }
         }
     }
 }
