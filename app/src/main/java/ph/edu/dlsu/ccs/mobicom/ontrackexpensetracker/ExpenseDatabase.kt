@@ -111,7 +111,7 @@ class ExpenseDatabase(context: Context) {
                 DatabaseHandler.AMOUNT,
                 DatabaseHandler.CATEGORY,
                 DatabaseHandler.DATE_TIME,
-                DatabaseHandler.PHOTO_PATH
+                // DatabaseHandler.PHOTO_PATH
             )
             val selection = "${DatabaseHandler.ID} = ?"
             val selectionArgs = arrayOf(id.toString())
@@ -126,7 +126,7 @@ class ExpenseDatabase(context: Context) {
                 null
             )
 
-            if (cursor != null && cursor.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 val expenseId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHandler.ID))
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHandler.NAME))
                 val amount = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHandler.AMOUNT))

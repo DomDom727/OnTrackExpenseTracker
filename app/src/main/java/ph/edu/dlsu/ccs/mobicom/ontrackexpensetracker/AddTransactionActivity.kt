@@ -127,6 +127,10 @@ class AddTransactionActivity : ComponentActivity(), DatePickerDialog.OnDateSetLi
             Toast.makeText(this, "Expense added successfully", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, ViewTransactionActivity::class.java).apply {
                 putExtra(ViewTransactionActivity.EXTRA_EXPENSE_ID, rowId)
+                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NAME, name)
+                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_AMOUNT, amount)
+                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_CATEGORY, category)
+                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_DATE_TIME, date)
             }
             startActivity(intent)
             finish()

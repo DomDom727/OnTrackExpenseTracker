@@ -26,6 +26,10 @@ class MyAdapter(private val data: List<Expense>) : RecyclerView.Adapter<MyViewHo
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ViewTransactionActivity::class.java)
             intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_ID, currentExpense.id)
+            intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NAME, currentExpense.name)
+            intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_AMOUNT, currentExpense.amount)
+            intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_CATEGORY, currentExpense.category)
+            intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_DATE_TIME, currentExpense.dateTime)
             holder.itemView.context.startActivity(intent)
         }
     }
