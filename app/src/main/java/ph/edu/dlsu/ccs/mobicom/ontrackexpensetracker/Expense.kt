@@ -9,8 +9,8 @@ class Expense(
     var name: String,
     var amount: Double,
     var category: String,
-    var dateTime: String,
-    var photoPath: String?  // Nullable String to store the path/URI to the photo, if any
+    var dateTime: String
+    // var photoPath: String?  // Nullable String to store the path/URI to the photo, if any
 ) {
     companion object {
         private const val DEFAULT_ID = -1
@@ -27,27 +27,11 @@ class Expense(
         amount = amount,
         category = category,
         dateTime = dateTime,
-        photoPath = null
-    )
-
-    // Secondary constructor for convenience without photopath but with id
-    constructor(
-        id: Int,
-        name: String,
-        amount: Double,
-        category: String,
-        dateTime: String
-    ) : this(
-        id = id,
-        name = name,
-        amount = amount,
-        category = category,
-        dateTime = dateTime,
-        photoPath = null
+        // photoPath = null
     )
 
     override fun toString(): String {
-        return "Expense(id='$id', name='$name', amount=$amount, category='$category', dateTime=$dateTime, photoPath=$photoPath)"
+        return "Expense(id='$id', name='$name', amount=$amount, category='$category', dateTime=$dateTime)"
     }
 }
 
