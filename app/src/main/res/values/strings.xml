@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">OnTrack Expense Tracker</string>
+
+    <string-array name="categories">
+        <item>Food</item>
+        <item>Transport</item>
+        <item>Entertainment</item>
+        <item>Utilities</item>
+        <item>Health</item>
+        <item>Other</item>
+    </string-array>
 </resources>

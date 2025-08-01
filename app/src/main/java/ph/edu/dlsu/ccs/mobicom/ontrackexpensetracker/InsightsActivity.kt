@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.R
 
-class InsightsActivity : ComponentActivity() {
+class InsightsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insights)

@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ViewTransactionActivity : ComponentActivity() {
+class ViewTransactionActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_EXPENSE_ID = "extra_expense_id"

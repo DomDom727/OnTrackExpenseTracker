@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.R
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

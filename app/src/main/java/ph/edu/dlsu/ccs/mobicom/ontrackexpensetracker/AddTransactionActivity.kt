@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
@@ -22,7 +24,7 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.text.toDoubleOrNull
 
-class AddTransactionActivity : ComponentActivity(), DatePickerDialog.OnDateSetListener {
+class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var nameEditText: EditText
     private lateinit var amountEditText: EditText

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.R
 import ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.databinding.ActivityTransactionsBinding
 
-class TransactionsActivity : ComponentActivity() {
+class TransactionsActivity : AppCompatActivity() {
     private lateinit var data: ArrayList<Expense>         // Holds the data for the app
     private lateinit var myAdapter: MyAdapter               // Holds the adapter for the RecyclerView
     // private lateinit var viewBinding: ActivityTransactionsBinding   // Holds the views of the ActivityMainBinding

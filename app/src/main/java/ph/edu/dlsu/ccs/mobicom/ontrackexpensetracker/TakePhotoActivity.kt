@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.R
 
-class TakePhotoActivity : ComponentActivity() {
+class TakePhotoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_takephoto)

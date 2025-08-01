@@ -54,6 +54,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <EditText
+                android:id="@+id/editTextCategory"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:ems="10"
+                android:hint="type of expense"
+                android:inputType="text"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/parameter3"
+                app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
+
             <Button
                 android:id="@+id/scan_btn"
                 android:layout_width="60dp"
@@ -91,7 +105,7 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/parameter2" />
+                app:layout_constraintTop_toBottomOf="@+id/parameter4" />
 
             <TextView
                 android:id="@+id/parameter4"
@@ -105,7 +119,7 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/parameter3" />
+                app:layout_constraintTop_toBottomOf="@+id/parameter2" />
 
             <TextView
                 android:id="@+id/parameter5"
@@ -119,7 +133,7 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/parameter4" />
+                app:layout_constraintTop_toBottomOf="@+id/parameter3" />
 
             <TextView
                 android:id="@+id/parameter2"
@@ -193,33 +207,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
             <EditText
-                android:id="@+id/editTextCategory"
+                android:id="@+id/editTextDate"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:ems="10"
-                android:hint="type of expense"
-                android:inputType="text"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/parameter3"
-                app:layout_constraintTop_toBottomOf="@+id/editTextAmount" />
-
-            <EditText
-                android:id="@+id/editTextDate"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="24dp"
-                android:ems="10"
+                android:focusable="false"
                 android:hint="date of expense"
                 android:inputType="datetime"
                 android:textSize="16sp"
-                android:focusable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/parameter4"
-                app:layout_constraintTop_toBottomOf="@+id/editTextCategory" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextAmount" />
 
             <EditText
                 android:id="@+id/editTextTextMultiLine2"
