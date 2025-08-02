@@ -26,7 +26,6 @@
         android:id="@+id/balance_tv"
         android:layout_width="229dp"
         android:layout_height="51dp"
-        android:layout_marginTop="20dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Username"
@@ -166,7 +165,7 @@
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="296dp"
                     android:padding="12dp"
                     android:src="@drawable/sample_graph" />
 
