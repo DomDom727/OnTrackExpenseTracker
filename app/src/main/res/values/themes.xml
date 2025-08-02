@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.OnTrackExpenseTracker" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <style name="ColumnChartStyle">
+        <item name="layers">column</item>
+        <item name="showBottomAxis">true</item>
+        <item name="showStartAxis">true</item>
+    </style>
+
 </resources>
