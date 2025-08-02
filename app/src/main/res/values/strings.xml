@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">OnTrack Expense Tracker</string>
+    <string name="login">Login</string>
+    <string name="Email">Email</string>
+    <string name="AppName">OnTrack</string>
+    <string name="Password">Password</string>
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="not_registered">Not Registered?</string>
+    <string name="register2">Register</string>
+    <string name="already_have_an_account">Already have an account?</string>
 
     <string-array name="categories">
         <item>Food</item>
