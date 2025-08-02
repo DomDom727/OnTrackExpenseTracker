@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "952390566062",
+    "project_id": "ontrack-4e761",
+    "storage_bucket": "ontrack-4e761.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952390566062:android:5763984afabfca5bb32d3f",
+        "android_client_info": {
+          "package_name": "ph.edu.dles.ccs.mobicom.ontrackexpensetracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfr87aRlO53GvLyFB4OOWoEy--GWC8N-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
