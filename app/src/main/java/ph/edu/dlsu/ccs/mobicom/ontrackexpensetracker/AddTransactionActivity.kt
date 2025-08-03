@@ -33,6 +33,11 @@ import android.Manifest
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
@@ -55,6 +60,9 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var resultingText: String
+
+    //private val client = OkHttpClient()
+    //private val GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -158,10 +166,65 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
 
         recognizer.process(image).addOnSuccessListener { ocrText ->
             resultingText = ocrText.text
-            notesEditText.setText(resultingText)
+            val receiptData = parseReceipt(resultingText)
+            nameEditText.setText(receiptData.name)
+            amountEditText.setText(receiptData.amount)
+            dateEditText.setText(receiptData.date)
         }.addOnFailureListener { e ->
             Toast.makeText(this, "Error recognizing text: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    data class ReceiptData(
+        val name: String? = null,
+        val amount: String? = null,
+        val date: String? = null
+    )
+
+    private fun parseReceipt(text: String): ReceiptData {
+        var name: String? = null
+        var amount: String? = null
+        var date: String? = null
+
+        val normalizedText = text.replace("\n", " ").replace(Regex("\\s+"), " ")
+
+        // 1. Amount
+        val amountRegex = Regex("""(?i)(total|amount (due)?|grand total|balance)\s*[:\-]?\s*([₱$]?\s*[\d,]+(?:\.\d{2})?)""")
+        amount = amountRegex.find(normalizedText)?.groups?.get(3)?.value
+
+        // 2. Date — try multiple formats
+        val dateRegex = Regex("""(\d{1,4}[\/\-.]\d{1,2}[\/\-.]\d{1,4})""")
+        val rawDate = dateRegex.find(normalizedText)?.value
+
+        rawDate?.let {
+            val possibleFormats = listOf(
+                "MM/dd/yyyy", "dd/MM/yyyy", "yyyy/MM/dd",
+                "MM-dd-yyyy", "dd-MM-yyyy", "yyyy-MM-dd",
+                "MM.dd.yyyy", "dd.MM.yyyy", "yyyy.MM.dd",
+                "MM/dd/yy", "dd/MM/yy", "yy/MM/dd"
+            )
+
+            for (format in possibleFormats) {
+                try {
+                    val sdf = SimpleDateFormat(format, Locale.getDefault())
+                    sdf.isLenient = false
+                    val parsedDate = sdf.parse(it)
+                    if (parsedDate != null) {
+                        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        date = outputFormat.format(parsedDate)
+                        break
+                    }
+                } catch (_: Exception) {
+                    // try next format
+                }
+            }
+        }
+
+        // 3. Store Name
+        val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
+        name = lines.firstOrNull { !it.contains(Regex("receipt|invoice|total", RegexOption.IGNORE_CASE)) }
+
+        return ReceiptData(name, amount, date)
     }
 
 

@@ -75,4 +75,6 @@ dependencies {
     implementation("com.google.mlkit:text-recognition:16.0.1")
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
 }

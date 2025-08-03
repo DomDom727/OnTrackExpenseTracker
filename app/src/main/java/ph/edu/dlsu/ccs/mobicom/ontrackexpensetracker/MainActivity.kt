@@ -88,14 +88,14 @@ class MainActivity : AppCompatActivity() {
 
         chartView = findViewById(R.id.chart_view)
         chartView.modelProducer = modelProducer
-        /*
-        lifecycleScope.launch {
-            modelProducer.runTransaction {
-                columnSeries { series(monthlyTotals) }
+
+        if (monthlyTotals.isNotEmpty()) {
+            lifecycleScope.launch {
+                modelProducer.runTransaction {
+                    columnSeries { series(monthlyTotals) }
+                }
             }
         }
-
-         */
 
         val transactionsCardView: CardView = findViewById(R.id.cardView3)
         transactionsCardView.setOnClickListener {
@@ -119,6 +119,12 @@ class MainActivity : AppCompatActivity() {
         val addTransactionButton: Button = findViewById(R.id.newtransaction_btn)
         addTransactionButton.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
+        }
+
+        val profileButton: Button = findViewById(R.id.profile_btn)
+        profileButton.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
     }

@@ -25,6 +25,10 @@ class InsightsActivity : AppCompatActivity() {
     private lateinit var data: ArrayList<Expense>
     private lateinit var expenseRepository: ExpenseRepository
 
+    private lateinit var categoryString: String
+    private lateinit var monthString: String
+    private lateinit var yearString: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insights)
