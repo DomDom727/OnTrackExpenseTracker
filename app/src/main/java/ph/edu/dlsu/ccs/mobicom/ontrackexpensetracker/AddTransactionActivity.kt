@@ -2,7 +2,11 @@ package ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -26,15 +30,25 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.text.toDoubleOrNull
 import android.widget.Spinner
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import java.io.File
+import java.util.Date
+import android.Manifest
 
-class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
-    AdapterView.OnItemSelectedListener {
+class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
     private lateinit var nameEditText: EditText
     private lateinit var amountEditText: EditText
     private lateinit var categoryEditText: EditText
     private lateinit var dateEditText: EditText
     private lateinit var categoryString: String
+    private lateinit var scanButton: Button
+    private lateinit var notesEditText: EditText
 
     private lateinit var expenseDatabase: ExpenseDatabase
 
@@ -42,6 +56,11 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
     private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     private lateinit var categories: Array<String>
+
+    private var currentPhotoPath: String? = null
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
+    private lateinit var resultingText: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +72,27 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         amountEditText = findViewById(R.id.editTextAmount)
         //categoryEditText = findViewById(R.id.editTextCategory)
         dateEditText = findViewById(R.id.editTextDate)
+        scanButton = findViewById(R.id.scan_btn)
+        notesEditText = findViewById(R.id.editTextTextMultiLine2)
+
+        requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            isGranted ->
+            if (isGranted) {
+                captureImage()
+            } else {
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+            success ->
+            if (success) {
+                currentPhotoPath?.let { path ->
+                    val bitmap = BitmapFactory.decodeFile(path)
+                    recognizeText(bitmap)
+                }
+            }
+        }
 
         categories = resources.getStringArray(R.array.categories)
 
@@ -77,11 +117,8 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
             AddTransactionAndProceed()
         }
 
-        val cameraButton: Button = findViewById(R.id.scan_btn)
-        cameraButton.setOnClickListener {
-            val intent = Intent(this, TakePhotoActivity::class.java)
-            startActivity(intent)
-            finish()
+        scanButton.setOnClickListener {
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
 
         findViewById<EditText>(R.id.editTextDate).setOnClickListener {
@@ -93,7 +130,45 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
             ).show()
 
         }
+
+        if (intent.getBooleanExtra(MainActivity.EXTRA_TRIGGER_SCAN, false)) {
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
     }
+
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    private fun captureImage() {
+        val photoFile: File? = try {
+            createImageFile()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error creating image file", Toast.LENGTH_SHORT).show()
+            null
+        }
+        photoFile?.also {
+            val PhotoUri: Uri = FileProvider.getUriForFile(this, "${applicationContext.packageName}.provider", it)
+            takePictureLauncher.launch(PhotoUri)
+        }
+    }
+
+    private fun recognizeText(bitmap: Bitmap){
+        val image = InputImage.fromBitmap(bitmap, 0)
+        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+        recognizer.process(image).addOnSuccessListener { ocrText ->
+            resultingText = ocrText.text
+            notesEditText.setText(resultingText)
+        }.addOnFailureListener { e ->
+            Toast.makeText(this, "Error recognizing text: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         categoryString = categories[position]

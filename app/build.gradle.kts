@@ -71,4 +71,5 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 
     implementation(libs.vico.views)
+    implementation("com.google.mlkit:text-recognition:16.0.1")
 }

@@ -62,6 +62,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var chartView: CartesianChartView
     private lateinit var data: ArrayList<Expense>
 
+    companion object {
+        const val  EXTRA_TRIGGER_SCAN = "ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.TRIGGER_SCAN"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -96,7 +100,8 @@ class MainActivity : AppCompatActivity() {
 
         val cameraButton: Button = findViewById(R.id.camera_btn)
         cameraButton.setOnClickListener {
-            val intent = Intent(this, TakePhotoActivity::class.java)
+            val intent = Intent(this, AddTransactionActivity::class.java)
+            intent.putExtra(EXTRA_TRIGGER_SCAN, true)
             startActivity(intent)
         }
 
