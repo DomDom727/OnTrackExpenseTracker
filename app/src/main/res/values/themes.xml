@@ -7,6 +7,13 @@
         <item name="layers">column</item>
         <item name="showBottomAxis">true</item>
         <item name="showStartAxis">true</item>
+        <item name="showGuidelines">false</item>
+        <item name="bottomAxisStyle">@style/NoGuideLinesAxis</item>
+        <item name="startAxisStyle">@style/NoGuideLinesAxis</item>
+    </style>
+
+    <style name="NoGuideLinesAxis">
+        <item name="showGuidelines">false</item>
     </style>
 
 </resources>

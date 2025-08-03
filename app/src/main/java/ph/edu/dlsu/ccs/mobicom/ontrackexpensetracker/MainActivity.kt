@@ -38,7 +38,11 @@ import com.patrykandpatrick.vico.views.cartesian.CartesianChartView
 //import com.patrykandpatrick.vico.views.common.theme.ThemeHandler
 import android.graphics.Color // For setting colors programmatically if needed
 import android.graphics.Typeface
+import android.util.Log
+import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.lifecycleScope
+//import androidx.privacysandbox.tools.core.generator.build
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 //import com.patrykandpatrick.vico.core.cartesian.axis.AxisPosition
 import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
 //import com.patrykandpatrick.vico.core.common.Dimensions
@@ -46,26 +50,37 @@ import com.patrykandpatrick.vico.core.common.component.LineComponent
 import com.patrykandpatrick.vico.core.common.component.ShapeComponent
 import com.patrykandpatrick.vico.core.common.shape.Shape
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.TreeMap
+import java.util.Locale.getDefault
 
 
 class MainActivity : AppCompatActivity() {
 
     val modelProducer = CartesianChartModelProducer()
     private lateinit var chartView: CartesianChartView
+    private lateinit var data: ArrayList<Expense>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        val expenseDatabase = ExpenseDatabase(applicationContext)
+        this.data = expenseDatabase.getExpenses()
+
+        val aggregatedData = aggregateExpensesByMonth(data)
+        val monthlyTotals = getMonthlyTotalsForChart(aggregatedData)
+        val monthLabels = getMonthLabelsForChart(aggregatedData)
+
         chartView = findViewById(R.id.chart_view)
         chartView.modelProducer = modelProducer
         lifecycleScope.launch {
             modelProducer.runTransaction {
-                columnSeries { series(5, 6, 5, 2, 11, 8, 5, 2, 15, 11, 8, 13, 12, 10, 2, 7) }
+                columnSeries { series(monthlyTotals) }
             }
         }
-
 
         val transactionsCardView: CardView = findViewById(R.id.cardView3)
         transactionsCardView.setOnClickListener {
@@ -90,5 +105,31 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AddTransactionActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun aggregateExpensesByMonth(expenses: List<Expense>): Map<String, Double> {
+        val monthlyExpenses = mutableMapOf<String, Double>()
+        val inputFormatter = SimpleDateFormat("yyyy-MM-dd", getDefault())
+        val monthYearFormatter = SimpleDateFormat("MMMM yyyy", getDefault())
+        for (expense in expenses) {
+            try {
+                val date = inputFormatter.parse(expense.dateTime)
+                if (date != null) {
+                    val monthYearKey = monthYearFormatter.format(date)
+                    monthlyExpenses[monthYearKey] = (monthlyExpenses[monthYearKey] ?: 0.0) + expense.amount
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error parsing date: ${e.message}")
+            }
+        }
+        return monthlyExpenses.toSortedMap()
+    }
+
+    private fun getMonthlyTotalsForChart(monthlyAggregatedExpenses: Map<String, Double>): List<Number> {
+        return monthlyAggregatedExpenses.values.toList()
+    }
+
+    private fun getMonthLabelsForChart(monthlyAggregatedExpenses: Map<String, Double>): List<String> {
+        return monthlyAggregatedExpenses.keys.toList()
     }
 }
