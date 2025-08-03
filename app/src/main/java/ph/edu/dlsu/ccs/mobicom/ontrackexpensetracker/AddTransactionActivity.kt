@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -23,18 +25,23 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import kotlin.text.toDoubleOrNull
+import android.widget.Spinner
 
-class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
+    AdapterView.OnItemSelectedListener {
 
     private lateinit var nameEditText: EditText
     private lateinit var amountEditText: EditText
     private lateinit var categoryEditText: EditText
     private lateinit var dateEditText: EditText
+    private lateinit var categoryString: String
 
     private lateinit var expenseDatabase: ExpenseDatabase
 
     private val calendar = Calendar.getInstance()
     private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+    private lateinit var categories: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +51,20 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
 
         nameEditText = findViewById(R.id.editTextName)
         amountEditText = findViewById(R.id.editTextAmount)
-        categoryEditText = findViewById(R.id.editTextCategory)
+        //categoryEditText = findViewById(R.id.editTextCategory)
         dateEditText = findViewById(R.id.editTextDate)
+
+        categories = resources.getStringArray(R.array.categories)
+
+        val spinner = findViewById<Spinner>(R.id.spinnerCategory)
+        spinner.onItemSelectedListener = this
+
+
+        val spinnerAdapter = ArrayAdapter<Any?>(this,
+            android.R.layout.simple_spinner_dropdown_item, categories)
+
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = spinnerAdapter
 
         val backButton: Button = findViewById(R.id.back_btn)
         backButton.setOnClickListener {
@@ -76,6 +95,11 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         }
     }
 
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        categoryString = categories[position]
+    }
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
+
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         Log.e("Calender", "$year/$month/$dayOfMonth")
         calendar.set(year, month, dayOfMonth)
@@ -89,7 +113,7 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
     private fun AddTransactionAndProceed() {
         val name = nameEditText.text.toString().trim()
         val amountStr = amountEditText.text.toString().trim()
-        val category = categoryEditText.text.toString().trim()
+        val category = categoryString
         val date = dateEditText.text.toString().trim()
 
 
