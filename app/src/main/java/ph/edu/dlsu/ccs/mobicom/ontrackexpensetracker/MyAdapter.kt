@@ -30,6 +30,7 @@ class MyAdapter(private val data: List<Expense>) : RecyclerView.Adapter<MyViewHo
             intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_AMOUNT, currentExpense.amount)
             intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_CATEGORY, currentExpense.category)
             intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_DATE_TIME, currentExpense.dateTime)
+            intent.putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NOTES, currentExpense.notes)
             holder.itemView.context.startActivity(intent)
         }
     }

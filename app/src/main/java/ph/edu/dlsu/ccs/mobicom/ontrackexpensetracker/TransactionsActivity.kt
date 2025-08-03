@@ -24,7 +24,6 @@ class TransactionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transactions)
 
-        // val expenseDatabase = ExpenseDatabase(applicationContext)
         expenseRepository = ExpenseRepository()
         this.data = ArrayList()
         this.myAdapter = MyAdapter(this.data)

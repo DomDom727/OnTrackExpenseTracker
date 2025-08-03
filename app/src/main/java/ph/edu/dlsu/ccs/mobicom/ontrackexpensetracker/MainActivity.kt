@@ -61,7 +61,6 @@ class MainActivity : AppCompatActivity() {
     val modelProducer = CartesianChartModelProducer()
     private lateinit var chartView: CartesianChartView
     private lateinit var data: ArrayList<Expense>
-    private lateinit var expenseDatabase: ExpenseDatabase
     private lateinit var expenseRepository: ExpenseRepository
 
     companion object {
@@ -73,7 +72,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        //val expenseDatabase = ExpenseDatabase(applicationContext)
         expenseRepository = ExpenseRepository()
         data = ArrayList()
 

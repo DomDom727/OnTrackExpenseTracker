@@ -25,42 +25,38 @@ class ViewTransactionActivity : AppCompatActivity() {
         const val EXTRA_EXPENSE_AMOUNT = "extra_expense_amount"
         const val EXTRA_EXPENSE_CATEGORY = "extra_expense_category"
         const val EXTRA_EXPENSE_DATE_TIME = "extra_expense_date_time"
+        const val EXTRA_EXPENSE_NOTES = "extra_expense_notes"
     }
-    private lateinit var expenseDatabase: ExpenseDatabase
 
     private lateinit var nameTextView: TextView
     private lateinit var amountTextView: TextView
     private lateinit var dateTextView: TextView
     private lateinit var categoryTextView: TextView
-    // private lateinit var notesTextView: TextView
+    private lateinit var notesTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_transaction)
 
-        expenseDatabase = ExpenseDatabase(applicationContext)
-        // nameTextView = findViewById(R.id.expense_name_tv)
-        // amountTextView = findViewById(R.id.amount_tv)
-        // dateTextView = findViewById(R.id.dateTime_tv)
-        // categoryTextView = findViewById(R.id.categoryValue_tv)
         val intent = intent
-        val expenseId = intent.getLongExtra(EXTRA_EXPENSE_ID, -1L)
-        //val expense = expenseDatabase.getExpenseFromId(expenseId.toInt())
+        // val expenseId = intent.getLongExtra(EXTRA_EXPENSE_ID, -1L)
 
         val name = intent.getStringExtra(EXTRA_EXPENSE_NAME)
         val amount = intent.getDoubleExtra(EXTRA_EXPENSE_AMOUNT, 0.0)
         val date = intent.getStringExtra(EXTRA_EXPENSE_DATE_TIME)
         val category = intent.getStringExtra(EXTRA_EXPENSE_CATEGORY)
+        val notes = intent.getStringExtra(EXTRA_EXPENSE_NOTES)
 
         findViewById<TextView>(R.id.expense_name_tv).setText(name)
         findViewById<TextView>(R.id.amount_tv).setText(amount.toString())
         findViewById<TextView>(R.id.dateTime_tv).setText(date)
         findViewById<TextView>(R.id.categoryValue_tv).setText(category)
+        findViewById<TextView>(R.id.notesValue_tv).setText(notes)
+
 
 
         val backButton: Button = findViewById(R.id.back_btn)
         backButton.setOnClickListener {
-            //finish()
             onBackPressedDispatcher.onBackPressed()
         }
     }

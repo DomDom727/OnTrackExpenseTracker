@@ -44,7 +44,6 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
     private lateinit var scanButton: Button
     private lateinit var notesEditText: EditText
 
-    private lateinit var expenseDatabase: ExpenseDatabase
     private lateinit var expenseRepository: ExpenseRepository
 
     private val calendar = Calendar.getInstance()
@@ -242,26 +241,19 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
 
             if (expenseId != null) {
                 Toast.makeText(this@AddTransactionActivity, "Expense added successfully", Toast.LENGTH_SHORT).show()
-
-                // Decide what to do next. ViewTransactionActivity might need refactoring
-                // if it also relied on SQLite IDs or local Expense objects.
-                // For now, let's assume it can take basic details or a Firestore ID.
-
                 val intent = Intent(this@AddTransactionActivity, ViewTransactionActivity::class.java).apply {
                     // Pass data that ViewTransactionActivity expects.
-                    // If it needs to fetch from Firestore, just pass the ID.
-                    // putExtra(ViewTransactionActivity.EXTRA_EXPENSE_ID_FIRESTORE, expenseId) // NEW EXTRA FOR FIRESTORE ID
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NAME, name)
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_AMOUNT, amount)
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_CATEGORY, category)
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_DATE_TIME, date)
-                    // Potentially pass notes too
+                    putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NOTES, notes)
+
                 }
                 startActivity(intent)
                 finish() // Finish AddTransactionActivity
             } else {
                 Toast.makeText(this@AddTransactionActivity, "Failed to add expense", Toast.LENGTH_SHORT).show()
-                // Hide loading indicator here
             }
         }
 

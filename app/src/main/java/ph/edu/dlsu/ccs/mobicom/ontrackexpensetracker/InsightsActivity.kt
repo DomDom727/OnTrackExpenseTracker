@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 // import androidx.compose.ui.text.intl.Locale
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.R
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -21,14 +23,20 @@ import kotlin.text.append
 
 class InsightsActivity : AppCompatActivity() {
     private lateinit var data: ArrayList<Expense>
-    private lateinit var expenseDatabase: ExpenseDatabase
+    private lateinit var expenseRepository: ExpenseRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insights)
 
-        expenseDatabase = ExpenseDatabase(this)
-        //expenseDatabase.getExpenses()
+        expenseRepository = ExpenseRepository()
+        data = ArrayList()
+
+        lifecycleScope.launch {
+            val fetchedData = expenseRepository.getExpenses()
+            data.clear()
+            data.addAll(fetchedData)
+        }
 
         val exportButton: Button = findViewById(R.id.export_btn)
         exportButton.setOnClickListener {

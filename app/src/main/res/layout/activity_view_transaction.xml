@@ -54,17 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/back_btn2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/baseline_edit_24"
-                android:contentDescription="Edit Expense"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
             <View
                 android:id="@+id/divider3"
                 android:layout_width="0dp"
@@ -81,11 +70,11 @@
                 android:id="@+id/notes_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:text="Notes:"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@+id/divider2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/category_tv" />
 
@@ -99,18 +88,18 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/divider2"
+                app:layout_constraintStart_toEndOf="@+id/category_tv"
                 app:layout_constraintTop_toBottomOf="@+id/dateTime_tv" />
 
             <TextView
                 android:id="@+id/category_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="100dp"
-                android:text="Category"
+                android:text="Category:"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@+id/divider2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dateTime_tv" />
 
@@ -118,7 +107,7 @@
                 android:id="@+id/dateTime_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="June 21, 2025  16:27"
+                android:text="7 / 27 / 2025"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -153,16 +142,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/expense_name_tv" />
 
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="50dp"
-                android:layout_height="1dp"
+            <TextView
+                android:id="@+id/notesValue_tv"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="115dp"
-                android:background="?android:attr/listDivider"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="24dp"
+                android:text="TextView"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dateTime_tv" />
+                app:layout_constraintTop_toBottomOf="@+id/notes_tv" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
