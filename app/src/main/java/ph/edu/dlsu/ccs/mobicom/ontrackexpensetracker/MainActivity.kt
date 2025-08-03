@@ -74,28 +74,24 @@ class MainActivity : AppCompatActivity() {
 
         expenseRepository = ExpenseRepository()
         data = ArrayList()
+        chartView = findViewById(R.id.chart_view)
+        chartView.modelProducer = modelProducer
 
         lifecycleScope.launch {
             val fetchedData = expenseRepository.getExpenses()
             data.clear()
             data.addAll(fetchedData)
-            //updateChart()
-        }
-
-        val aggregatedData = aggregateExpensesByMonth(data)
-        val monthlyTotals = getMonthlyTotalsForChart(aggregatedData)
-        val monthLabels = getMonthLabelsForChart(aggregatedData)
-
-        chartView = findViewById(R.id.chart_view)
-        chartView.modelProducer = modelProducer
-
-        if (monthlyTotals.isNotEmpty()) {
-            lifecycleScope.launch {
+            val aggregatedData = aggregateExpensesByMonth(data)
+            val monthlyTotals = getMonthlyTotalsForChart(aggregatedData)
+            val monthLabels = getMonthLabelsForChart(aggregatedData)
+            if (monthlyTotals.isNotEmpty()) {
                 modelProducer.runTransaction {
                     columnSeries { series(monthlyTotals) }
                 }
+                //updateChart()
             }
         }
+
 
         val transactionsCardView: CardView = findViewById(R.id.cardView3)
         transactionsCardView.setOnClickListener {
