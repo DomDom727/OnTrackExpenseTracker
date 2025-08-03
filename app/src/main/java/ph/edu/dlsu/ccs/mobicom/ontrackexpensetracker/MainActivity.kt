@@ -61,6 +61,8 @@ class MainActivity : AppCompatActivity() {
     val modelProducer = CartesianChartModelProducer()
     private lateinit var chartView: CartesianChartView
     private lateinit var data: ArrayList<Expense>
+    private lateinit var expenseDatabase: ExpenseDatabase
+    private lateinit var expenseRepository: ExpenseRepository
 
     companion object {
         const val  EXTRA_TRIGGER_SCAN = "ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.TRIGGER_SCAN"
@@ -71,8 +73,16 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        val expenseDatabase = ExpenseDatabase(applicationContext)
-        this.data = expenseDatabase.getExpenses()
+        //val expenseDatabase = ExpenseDatabase(applicationContext)
+        expenseRepository = ExpenseRepository()
+        data = ArrayList()
+
+        lifecycleScope.launch {
+            val fetchedData = expenseRepository.getExpenses()
+            data.clear()
+            data.addAll(fetchedData)
+            //updateChart()
+        }
 
         val aggregatedData = aggregateExpensesByMonth(data)
         val monthlyTotals = getMonthlyTotalsForChart(aggregatedData)
@@ -80,11 +90,14 @@ class MainActivity : AppCompatActivity() {
 
         chartView = findViewById(R.id.chart_view)
         chartView.modelProducer = modelProducer
+        /*
         lifecycleScope.launch {
             modelProducer.runTransaction {
                 columnSeries { series(monthlyTotals) }
             }
         }
+
+         */
 
         val transactionsCardView: CardView = findViewById(R.id.cardView3)
         transactionsCardView.setOnClickListener {

@@ -28,7 +28,7 @@ class InsightsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_insights)
 
         expenseDatabase = ExpenseDatabase(this)
-        data = expenseDatabase.getExpenses()
+        //expenseDatabase.getExpenses()
 
         val exportButton: Button = findViewById(R.id.export_btn)
         exportButton.setOnClickListener {

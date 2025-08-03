@@ -11,20 +11,11 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.ui.geometry.isEmpty
-import androidx.compose.ui.semantics.error
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -39,6 +30,9 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
 import java.util.Date
 import android.Manifest
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
@@ -51,6 +45,7 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
     private lateinit var notesEditText: EditText
 
     private lateinit var expenseDatabase: ExpenseDatabase
+    private lateinit var expenseRepository: ExpenseRepository
 
     private val calendar = Calendar.getInstance()
     private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -66,7 +61,8 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_transaction)
 
-        expenseDatabase = ExpenseDatabase(applicationContext)
+        // expenseDatabase = ExpenseDatabase(applicationContext)
+        expenseRepository = ExpenseRepository()
 
         nameEditText = findViewById(R.id.editTextName)
         amountEditText = findViewById(R.id.editTextAmount)
@@ -114,7 +110,7 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
 
         val addButton: Button = findViewById(R.id.add_btn)
         addButton.setOnClickListener {
-            AddTransactionAndProceed()
+            addTransactionAndProceed()
         }
 
         scanButton.setOnClickListener {
@@ -185,11 +181,12 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         findViewById<EditText>(R.id.editTextDate).setText(formatter.format(timestamp))
     }
 
-    private fun AddTransactionAndProceed() {
+    private fun addTransactionAndProceed() {
         val name = nameEditText.text.toString().trim()
         val amountStr = amountEditText.text.toString().trim()
         val category = categoryString
         val date = dateEditText.text.toString().trim()
+        var notes = notesEditText.text.toString().trim()
 
 
         // Input Validation
@@ -220,24 +217,54 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
             dateEditText.error = "Date cannot be empty"
             return
         }
-
-        val expense = Expense(name, amount, category, date)
-        val rowId = expenseDatabase.addExpense(expense)
-
-        if (rowId != -1) {
-            Toast.makeText(this, "Expense added successfully", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, ViewTransactionActivity::class.java).apply {
-                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_ID, rowId)
-                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NAME, name)
-                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_AMOUNT, amount)
-                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_CATEGORY, category)
-                putExtra(ViewTransactionActivity.EXTRA_EXPENSE_DATE_TIME, date)
-            }
-            startActivity(intent)
-            finish()
-        } else {
-            Toast.makeText(this, "Failed to add expense", Toast.LENGTH_SHORT).show()
+        if (notes.isEmpty()) {
+            notes = ""
         }
+
+        val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
+        if (currentFirebaseUser == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val userId = currentFirebaseUser.uid
+
+        val expense = Expense(
+            userId = userId,
+            name = name,
+            amount = amount,
+            category = category,
+            dateTime = date,
+            notes = notes
+        )
+
+        lifecycleScope.launch {
+            val expenseId = expenseRepository.addExpense(expense)
+
+            if (expenseId != null) {
+                Toast.makeText(this@AddTransactionActivity, "Expense added successfully", Toast.LENGTH_SHORT).show()
+
+                // Decide what to do next. ViewTransactionActivity might need refactoring
+                // if it also relied on SQLite IDs or local Expense objects.
+                // For now, let's assume it can take basic details or a Firestore ID.
+
+                val intent = Intent(this@AddTransactionActivity, ViewTransactionActivity::class.java).apply {
+                    // Pass data that ViewTransactionActivity expects.
+                    // If it needs to fetch from Firestore, just pass the ID.
+                    // putExtra(ViewTransactionActivity.EXTRA_EXPENSE_ID_FIRESTORE, expenseId) // NEW EXTRA FOR FIRESTORE ID
+                    putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NAME, name)
+                    putExtra(ViewTransactionActivity.EXTRA_EXPENSE_AMOUNT, amount)
+                    putExtra(ViewTransactionActivity.EXTRA_EXPENSE_CATEGORY, category)
+                    putExtra(ViewTransactionActivity.EXTRA_EXPENSE_DATE_TIME, date)
+                    // Potentially pass notes too
+                }
+                startActivity(intent)
+                finish() // Finish AddTransactionActivity
+            } else {
+                Toast.makeText(this@AddTransactionActivity, "Failed to add expense", Toast.LENGTH_SHORT).show()
+                // Hide loading indicator here
+            }
+        }
+
     }
 
 

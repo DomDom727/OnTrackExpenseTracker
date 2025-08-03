@@ -12,7 +12,7 @@ class ExpenseDatabase(context: Context) {
     init {
         this.databaseHandler = DatabaseHandler(context)
     }
-
+/*
     fun addExpense(expense: Expense): Int {
         val db = databaseHandler.writableDatabase
 
@@ -143,5 +143,7 @@ class ExpenseDatabase(context: Context) {
         }
         return expense
     }
+
+ */
 
 }
