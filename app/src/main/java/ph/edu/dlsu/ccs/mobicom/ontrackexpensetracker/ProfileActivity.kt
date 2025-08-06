@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import androidx.activity.result.contract.ActivityResultContracts
 import android.app.Activity
+import android.widget.Button
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -15,6 +16,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var changePasswordRow: LinearLayout
     private lateinit var usernameTextView: TextView
     private lateinit var signOutText: TextView
+    private lateinit var backButton: Button
 
     companion object {
         private const val TAG = "ProfileActivity"
@@ -35,6 +37,12 @@ class ProfileActivity : AppCompatActivity() {
         editProfileRow.setOnClickListener {
             val intent = Intent(this, EditProfileActivity::class.java)
             startActivity(intent)
+        }
+
+        // Back Button
+        backButton = findViewById(R.id.back_btn3)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
 
         changePasswordRow = findViewById(R.id.changePasswordRow)
