@@ -20,6 +20,7 @@ class ChangePasswordActivity : AppCompatActivity() {
     private lateinit var newPasswordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
     private lateinit var confirmChangeButton: Button
+    private lateinit var backButton: Button
 
     // Declare toggle ImageButtons
     private lateinit var currentPasswordToggle: ImageButton
@@ -43,11 +44,17 @@ class ChangePasswordActivity : AppCompatActivity() {
         newPasswordEditText = findViewById(R.id.editTextNewPassword)
         confirmPasswordEditText = findViewById(R.id.editTextConfirmPass)
         confirmChangeButton = findViewById(R.id.buttonConfirmChange)
+        backButton = findViewById(R.id.back_btn2)
 
         // Initialize toggle ImageButtons
         currentPasswordToggle = findViewById(R.id.currentPasswordToggle)
         newPasswordToggle = findViewById(R.id.newPasswordToggle)
         confirmPassToggle = findViewById(R.id.confirmPassToggle)
+
+        // Back Button
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         // --- Logic for the Password Toggles ---
 
