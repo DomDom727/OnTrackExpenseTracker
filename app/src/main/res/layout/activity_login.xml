@@ -85,11 +85,12 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/toggle_password_visibility"
         android:padding="8dp"
-        app:tint="@color/card_background"
         app:layout_constraintBottom_toBottomOf="@+id/editTextPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editTextPassword"
-        app:srcCompat="@drawable/visibility_off_24" />
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/visibility_off_24"
+        app:tint="@color/card_background" />
 
     <Button
         android:id="@+id/loginButton"
