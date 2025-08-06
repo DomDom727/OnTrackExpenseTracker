@@ -19,7 +19,7 @@
     <string name="confirm_change">Confirm Change</string>
     <string name="back_button">Back Button</string>
     <string name="password_lock">Password Lock</string>
-    <string name="add_expense">Add expense</string>
+    <string name="add_expense">Add Expense</string>
     <string name="save">SAVE</string>
     <string name="amount_spent">amount spent</string>
     <string name="date_of_expense">date of expense</string>
@@ -30,6 +30,14 @@
     <string name="notifications">Notifications</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="back">Back</string>
+    <string name="additional_notes">additional notes</string>
+    <string name="expense_name">expense name</string>
+    <string name="amount">Amount:</string>
+    <string name="date">Date:</string>
+    <string name="category">Category:</string>
+    <string name="notes">Notes:</string>
+    <string name="scan_receipt">Scan Receipt:</string>
+    <string name="scan_picture_of_receipt">Scan Picture of Receipt</string>
 
     <string-array name="categories">
         <item>Food</item>
