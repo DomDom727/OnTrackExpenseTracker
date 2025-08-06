@@ -80,21 +80,11 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Username Logic
+        // Initialize TextView
         usernameTextView = findViewById(R.id.user_tv)
 
-        val currentUser = auth.currentUser
-
-        if (currentUser != null) {
-            // Check if the user has a display name, otherwise use the email
-            val displayName = currentUser.displayName
-            if (displayName != null && displayName.isNotEmpty()) {
-                usernameTextView.text = displayName.trim()
-            } else {
-                // Fallback to displaying the user's email if no display name is set
-                usernameTextView.text = currentUser.email.toString().trim()
-            }
-        }
+        // This is called on creation to initially populate the UI
+        updateUserNameUI()
 
         expenseRepository = ExpenseRepository()
         data = ArrayList()
@@ -167,6 +157,30 @@ class MainActivity : AppCompatActivity() {
         profileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // This will be called every time MainActivity returns to the foreground,
+        // ensuring the username is always up-to-date.
+        updateUserNameUI()
+    }
+
+    /**
+     * A helper function to load and display the user's display name.
+     */
+    private fun updateUserNameUI() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            // Check if the user has a display name, otherwise use the email
+            val displayName = currentUser.displayName
+            if (displayName != null && displayName.isNotEmpty()) {
+                usernameTextView.text = displayName.trim()
+            } else {
+                // Fallback to displaying the user's email if no display name is set
+                usernameTextView.text = currentUser.email.toString().trim()
+            }
         }
     }
 

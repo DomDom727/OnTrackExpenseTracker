@@ -63,6 +63,9 @@
         <activity
             android:name=".EditTransactionActivity"
             android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
 
         <provider
             android:authorities="${applicationId}.provider"
