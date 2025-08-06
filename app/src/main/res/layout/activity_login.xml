@@ -30,10 +30,11 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
+        android:autofillHints="true"
         android:backgroundTint="@color/card_background"
         android:ems="10"
         android:hint="@string/Email"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         android:textColor="@color/card_background"
         android:textColorHint="@color/card_background"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,8 +63,10 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="40dp"
+        android:autofillHints="true"
         android:backgroundTint="@color/card_background"
         android:ems="10"
+        android:fontFamily="sans-serif"
         android:hint="@string/Password"
         android:inputType="textPassword"
         android:textColor="@color/card_background"
@@ -72,6 +75,21 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
+
+
+    <ImageButton
+        android:id="@+id/passwordToggle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/toggle_password_visibility"
+        android:padding="8dp"
+        app:tint="@color/card_background"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextPassword"
+        app:srcCompat="@drawable/visibility_off_24" />
 
     <Button
         android:id="@+id/loginButton"

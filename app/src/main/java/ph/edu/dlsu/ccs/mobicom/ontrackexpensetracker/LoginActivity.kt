@@ -2,10 +2,12 @@ package ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +25,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
     private lateinit var registerButton: Button
     private lateinit var forgotPasswordButton: Button
+    private lateinit var passwordToggle: ImageButton
+
+    private var isPasswordVisible: Boolean = false
 
     companion object {
         private const val TAG = "LoginActivity"
@@ -42,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
         loginButton = findViewById(R.id.loginButton)
         registerButton = findViewById(R.id.registerButton)
         forgotPasswordButton = findViewById(R.id.forgotPasswordButton)
+        passwordToggle = findViewById(R.id.passwordToggle)
 
         // Set an OnClickListener for the login button
         loginButton.setOnClickListener {
@@ -97,6 +103,22 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this@LoginActivity, "Failed to send reset email: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     }
                 }
+        }
+
+        // Logic for the password toggle
+        passwordToggle.setOnClickListener {
+            isPasswordVisible = !isPasswordVisible // Toggle the state
+            if (isPasswordVisible) {
+                // Show password
+                passwordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                passwordToggle.setImageResource(R.drawable.visibility_24) // Change icon to 'visible'
+            } else {
+                // Hide password
+                passwordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                passwordToggle.setImageResource(R.drawable.visibility_off_24) // Change icon to 'hidden'
+            }
+            // Move cursor to the end of the text
+            passwordEditText.setSelection(passwordEditText.text.length)
         }
     }
 
