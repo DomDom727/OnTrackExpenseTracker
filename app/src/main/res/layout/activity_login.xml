@@ -78,6 +78,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/rounded_button"
         android:text="@string/login"
@@ -107,10 +108,23 @@
         android:background="@android:color/transparent"
         android:text="@string/register"
         android:textAllCaps="false"
-        android:textColor="@color/card_background"
+        android:textColor="#01AA6F"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+
+    <Button
+        android:id="@+id/forgotPasswordButton"
+        android:layout_width="173dp"
+        android:layout_height="19dp"
+        android:layout_marginEnd="40dp"
+        android:background="@android:color/transparent"
+        android:text="@string/forgot_password"
+        android:textAlignment="textEnd"
+        android:textAllCaps="false"
+        android:textColor="#01AA6F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

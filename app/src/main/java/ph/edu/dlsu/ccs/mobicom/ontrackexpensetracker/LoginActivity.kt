@@ -22,6 +22,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
     private lateinit var registerButton: Button
+    private lateinit var forgotPasswordButton: Button
 
     companion object {
         private const val TAG = "LoginActivity"
@@ -35,11 +36,12 @@ class LoginActivity : AppCompatActivity() {
         // Initialize Firebase Auth instance
         auth = FirebaseAuth.getInstance()
 
-        // Find the UI elements by their assumed IDs from the layout
+        // Find the UI elements
         emailEditText = findViewById(R.id.editTextEmail)
         passwordEditText = findViewById(R.id.editTextPassword)
         loginButton = findViewById(R.id.loginButton)
         registerButton = findViewById(R.id.registerButton)
+        forgotPasswordButton = findViewById(R.id.forgotPasswordButton)
 
         // Set an OnClickListener for the login button
         loginButton.setOnClickListener {
@@ -70,6 +72,31 @@ class LoginActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        forgotPasswordButton.setOnClickListener {
+            // Get the email from the emailEditText field.
+            val email = emailEditText.text.toString().trim()
+
+            // We could add another view here for just changing the password
+
+            // Check if the email field is empty.
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(this@LoginActivity, "Please enter your email to reset password.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Call the Firebase method to send a password reset email.
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Password reset email was sent successfully.
+                        Toast.makeText(this@LoginActivity, "Password reset email sent to $email", Toast.LENGTH_LONG).show()
+                    } else {
+                        // Handle any errors that occur.
+                        Toast.makeText(this@LoginActivity, "Failed to send reset email: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
         }
     }
 

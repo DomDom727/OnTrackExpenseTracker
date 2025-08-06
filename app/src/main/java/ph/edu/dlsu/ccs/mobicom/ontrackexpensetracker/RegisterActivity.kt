@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 
 class RegisterActivity : AppCompatActivity() {
     // Declare Firebase Auth
@@ -19,6 +20,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
+    private lateinit var usernameEditText: EditText
     private lateinit var registerButton: Button
     private lateinit var loginButton: Button
 
@@ -37,12 +39,14 @@ class RegisterActivity : AppCompatActivity() {
         emailEditText = findViewById(R.id.editTextEmail)
         passwordEditText = findViewById(R.id.editTextPassword)
         confirmPasswordEditText = findViewById(R.id.editTextConfirmPassword)
+        usernameEditText = findViewById(R.id.editTextUsername)
         registerButton = findViewById(R.id.registerButton)
         loginButton = findViewById(R.id.loginButton)
 
         // Set an OnClickListener for the register button
         registerButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
+            val username = usernameEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
             val confirmPassword = confirmPasswordEditText.text.toString().trim()
 
@@ -50,6 +54,12 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this@RegisterActivity, "Enter email", Toast.LENGTH_SHORT).show();
                 return@setOnClickListener;
             }
+
+            if(TextUtils.isEmpty(username)){
+                Toast.makeText(this@RegisterActivity, "Enter username", Toast.LENGTH_SHORT).show();
+                return@setOnClickListener;
+            }
+
             if(TextUtils.isEmpty(password)){
                 Toast.makeText(this@RegisterActivity, "Enter password", Toast.LENGTH_SHORT).show();
                 return@setOnClickListener;
@@ -71,7 +81,7 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            registerUser(email, password)
+            registerUser(email, password, username)
         }
         // Set an OnClickListener for the login button
         loginButton.setOnClickListener {
@@ -83,26 +93,32 @@ class RegisterActivity : AppCompatActivity() {
     /**
      * This function attempts to register a user with Firebase Authentication.
      */
-    private fun registerUser(email: String, password: String) {
-        // [START create_user_with_email]
+    private fun registerUser(email: String, password: String, username: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(this@RegisterActivity, "Account created.", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "createUserWithEmail:success")
-                    // The user object is not used here, but can be useful for later actions.
-                    val user: FirebaseUser? = auth.currentUser
+                    val user = auth.currentUser
 
-                    // The user has a new variable 'loginIntent' so we must use this to start the activity.
+                    // Create a UserProfileChangeRequest to set the display name
+                    val profileUpdates = UserProfileChangeRequest.Builder()
+                        .setDisplayName(username)
+                        .build()
+
+                    // Update the user's profile with the new display name
+                    user?.updateProfile(profileUpdates)
+                        ?.addOnCompleteListener { profileTask ->
+                            if (profileTask.isSuccessful) {
+                                Log.d(TAG, "User profile updated with username.")
+                            }
+                        }
+
+                    Toast.makeText(this@RegisterActivity, "Account created.", Toast.LENGTH_SHORT).show()
                     val loginIntent = Intent(this, LoginActivity::class.java)
                     startActivity(loginIntent)
-                    // The 'finish()' function ensures the user cannot return to the register page with the back button.
                     finish()
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    // Display the specific error message from the Firebase exception.
                     Toast.makeText(
                         baseContext,
                         "Authentication failed: ${task.exception?.message}",

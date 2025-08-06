@@ -9,6 +9,8 @@
     <string name="not_registered">Not Registered?</string>
     <string name="register2">Register</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="username">Username</string>
 
     <string-array name="categories">
         <item>Food</item>
