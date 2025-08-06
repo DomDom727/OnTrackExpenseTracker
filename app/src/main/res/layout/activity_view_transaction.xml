@@ -80,9 +80,11 @@
 
             <TextView
                 android:id="@+id/categoryValue_tv"
-                android:layout_width="116dp"
+                android:layout_width="0dp"
                 android:layout_height="27dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="100dp"
+                android:layout_marginEnd="16dp"
                 android:gravity="center_horizontal"
                 android:text="Food"
                 android:textColor="@color/black"
@@ -156,6 +158,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/notes_tv" />
+
+            <ImageView
+                android:id="@+id/edit_iv"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/baseline_edit_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

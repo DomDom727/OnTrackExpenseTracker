@@ -1,7 +1,9 @@
 package ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -33,13 +35,14 @@ class ViewTransactionActivity : AppCompatActivity() {
     private lateinit var dateTextView: TextView
     private lateinit var categoryTextView: TextView
     private lateinit var notesTextView: TextView
+    private lateinit var editButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_transaction)
 
         val intent = intent
-        // val expenseId = intent.getLongExtra(EXTRA_EXPENSE_ID, -1L)
+        val expenseId = intent.getStringExtra(EXTRA_EXPENSE_ID)
 
         val name = intent.getStringExtra(EXTRA_EXPENSE_NAME)
         val amount = intent.getDoubleExtra(EXTRA_EXPENSE_AMOUNT, 0.0)
@@ -52,6 +55,21 @@ class ViewTransactionActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.dateTime_tv).setText(date)
         findViewById<TextView>(R.id.categoryValue_tv).setText(category)
         findViewById<TextView>(R.id.notesValue_tv).setText(notes)
+
+        editButton = findViewById(R.id.edit_iv)
+        editButton.setOnClickListener {
+            val editIntent = Intent(this, EditTransactionActivity::class.java).apply {
+                // Pass data that ViewTransactionActivity expects.
+                putExtra(EditTransactionActivity.EXTRA_EXPENSE_ID, expenseId)
+                putExtra(EditTransactionActivity.EXTRA_EXPENSE_NAME, name)
+                putExtra(EditTransactionActivity.EXTRA_EXPENSE_AMOUNT, amount)
+                putExtra(EditTransactionActivity.EXTRA_EXPENSE_CATEGORY, category)
+                putExtra(EditTransactionActivity.EXTRA_EXPENSE_DATE_TIME, date)
+                putExtra(EditTransactionActivity.EXTRA_EXPENSE_NOTES, notes)
+            }
+            startActivity(editIntent)
+            finish()
+        }
 
 
 

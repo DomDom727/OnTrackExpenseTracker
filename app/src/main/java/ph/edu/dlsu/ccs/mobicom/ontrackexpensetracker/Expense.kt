@@ -70,6 +70,25 @@ class Expense(
         createdAt =null
     )
 
+    constructor(
+        id: String,
+        userId: String,
+        name: String,
+        amount: Double,
+        category: String,
+        dateTime: String,
+        notes: String
+    ) : this(
+        id = id,
+        userId = userId,
+        name = name,
+        amount = amount,
+        category = category,
+        dateTime = dateTime,
+        notes = notes,
+        createdAt =null
+    )
+
     override fun toString(): String {
         return "Expense(id=$id, userId=$userId, name='$name', amount=$amount, category='$category', dateTime='$dateTime', createdAt=$createdAt)"
     }

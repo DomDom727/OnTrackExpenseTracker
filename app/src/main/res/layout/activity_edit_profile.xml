@@ -9,7 +9,7 @@
 
     <!-- Back Arrow and Title -->
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/editProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit Profile"
@@ -29,7 +29,7 @@
         android:textColor="#CCCCCC"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/editProfile"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="32dp" />
 
