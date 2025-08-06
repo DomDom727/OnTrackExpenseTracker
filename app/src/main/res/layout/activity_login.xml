@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/loginTitle"
-        android:layout_width="62dp"
+        android:layout_width="78dp"
         android:layout_height="34dp"
         android:text="@string/login"
         android:textColor="@color/card_background"
