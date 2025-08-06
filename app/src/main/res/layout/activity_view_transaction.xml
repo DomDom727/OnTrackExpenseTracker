@@ -58,11 +58,11 @@
                 android:id="@+id/deleteBtn"
                 android:layout_width="29dp"
                 android:layout_height="35dp"
-                android:layout_marginBottom="488dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="28dp"
                 app:layout_constraintHorizontal_bias="0.095"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/baseline_delete_24" />
 
             <View
@@ -174,11 +174,11 @@
                 android:id="@+id/edit_iv"
                 android:layout_width="29dp"
                 android:layout_height="35dp"
-                android:layout_marginBottom="488dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="28dp"
                 app:layout_constraintHorizontal_bias="0.904"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/baseline_edit_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
