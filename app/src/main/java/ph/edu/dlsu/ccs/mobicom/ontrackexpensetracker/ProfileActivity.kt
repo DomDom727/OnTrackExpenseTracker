@@ -42,6 +42,10 @@ class ProfileActivity : AppCompatActivity() {
 
         // Change Password Logic
         changePasswordRow = findViewById(R.id.changePasswordRow)
+        changePasswordRow.setOnClickListener {
+            val intent = Intent(this, ChangePasswordActivity::class.java)
+            startActivity(intent)
+        }
 
         // Sign Out Logic
         signOutText = findViewById(R.id.signOutText)
