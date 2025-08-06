@@ -45,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="32dp" />
 
-    <!-- First Name -->
+    <!--
     <EditText
         android:id="@+id/firstNameInput"
         android:layout_width="0dp"
@@ -63,7 +63,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"/>
 
-    <!-- Last Name -->
+
     <EditText
         android:id="@+id/lastNameInput"
         android:layout_width="0dp"
@@ -81,34 +81,55 @@
         android:layout_marginTop="12dp"
         android:layout_marginStart="8dp"/>
 
+    -->
+
     <!-- Email -->
+    <EditText
+        android:id="@+id/usernameInput"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background"
+        android:backgroundTint="#2E2E2E"
+        android:hint="Username"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editProfile" />
+
+    <!-- Save Button -->
+
     <EditText
         android:id="@+id/emailInput"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:hint="Email"
-        android:textColorHint="#AAAAAA"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2E2E2E"
+        android:layout_marginTop="16dp"
         android:background="@drawable/edit_text_background"
+        android:backgroundTint="#2E2E2E"
+        android:hint="Email"
         android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/firstNameInput"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usernameInput" />
 
-    <!-- Save Button -->
     <Button
         android:id="@+id/saveButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/rounded_button"
         android:text="Save"
         android:textColor="#FFFFFF"
-        android:background="@drawable/rounded_button"
         android:textStyle="bold"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/emailInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/emailInput" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
