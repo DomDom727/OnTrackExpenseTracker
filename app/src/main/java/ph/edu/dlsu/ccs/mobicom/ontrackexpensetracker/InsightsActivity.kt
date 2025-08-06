@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.add
+//import androidx.compose.ui.node.TreeSet
 // import androidx.compose.ui.text.intl.Locale
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -77,7 +79,9 @@ class InsightsActivity : AppCompatActivity() {
         monthSpinner = findViewById(R.id.filterMonthSpinner)
         yearSpinner = findViewById(R.id.filterYearSpinner)
 
-        setupSpinners()
+        lifecycleScope.launch {
+            setupSpinners()
+        }
 
         lifecycleScope.launch {
             val fetchedData = expenseRepository.getExpenses()
@@ -113,16 +117,27 @@ class InsightsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSpinners() {
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.filterCategories,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            categorySpinner.adapter = adapter
+    private suspend fun setupSpinners() {
+        val allExpenses = try {
+            expenseRepository.getExpenses()
+        } catch (e: Exception) {
+            Log.e("InsightsActivity", "Failed to fetch expenses for spinner setup", e)
+            Toast.makeText(this, "Could not load filter options", Toast.LENGTH_SHORT).show()
+            emptyList() // Return empty list on error to prevent crash
         }
 
+        // Category Spinner
+        val uniqueCategories = java.util.TreeSet<String>(String.CASE_INSENSITIVE_ORDER)
+        uniqueCategories.add("none") // Add a default "None" or "All" option
+        allExpenses.forEach { uniqueCategories.add(it.category) }
+
+        val categoryAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            uniqueCategories.toList() // Convert Set to List
+        )
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        categorySpinner.adapter = categoryAdapter
         categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 categoryString = parent.getItemAtPosition(position).toString()
@@ -135,17 +150,45 @@ class InsightsActivity : AppCompatActivity() {
                 categoryString = null // Or a default value
             }
         }
-
-        // Month Spinner
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.filterMonths, // Reference to your string array
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            monthSpinner.adapter = adapter
+        val noneCategoryPosition = uniqueCategories.indexOf("none")
+        if (noneCategoryPosition >= 0) {
+            categorySpinner.setSelection(noneCategoryPosition)
         }
 
+        // Month Spinner
+        val uniqueMonths = java.util.TreeSet<String>() // Using natural sort order for "January", "February", etc. if formatted that way
+        uniqueMonths.add("none")
+        val monthFormatter = SimpleDateFormat("MMMM", getDefault()) // e.g., "January"
+        val inputDateFormatter = SimpleDateFormat("yyyy-MM-dd", getDefault())
+
+        allExpenses.forEach { expense ->
+            try {
+                inputDateFormatter.parse(expense.dateTime)?.let { date ->
+                    uniqueMonths.add(monthFormatter.format(date))
+                }
+            } catch (e: Exception) {
+                Log.w("InsightsActivity", "Could not parse date for month: ${expense.dateTime}")
+            }
+        }
+        val monthList = uniqueMonths.toList().sortedWith(compareBy { monthName ->
+            if (monthName.equals("none", ignoreCase = true)) -1 // "None" first
+            else {
+                try {
+                    val cal = Calendar.getInstance()
+                    cal.time = SimpleDateFormat("MMMM", getDefault()).parse(monthName) ?: Date(0)
+                    cal.get(Calendar.MONTH)
+                } catch (e: Exception) {
+                    Int.MAX_VALUE // Put unparseable last
+                }
+            }
+        })
+        val monthAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            monthList
+        )
+        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        monthSpinner.adapter = monthAdapter
         monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 monthString = parent.getItemAtPosition(position).toString()
@@ -158,16 +201,37 @@ class InsightsActivity : AppCompatActivity() {
                 monthString = null // Or a default value
             }
         }
+        val noneMonthPosition = monthList.indexOf("none")
+        if (noneMonthPosition >= 0) {
+            monthSpinner.setSelection(noneMonthPosition)
+        }
 
         // Year Spinner
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.filterYears, // Reference to your string array
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            yearSpinner.adapter = adapter
+        val uniqueYears = java.util.TreeSet<String>() // TreeSet for natural sort (chronological for years)
+        uniqueYears.add("none")
+        val calendar = Calendar.getInstance()
+
+        allExpenses.forEach { expense ->
+            try {
+                inputDateFormatter.parse(expense.dateTime)?.let { date ->
+                    calendar.time = date
+                    uniqueYears.add(calendar.get(Calendar.YEAR).toString())
+                }
+            } catch (e: Exception) {
+                Log.w("InsightsActivity", "Could not parse date for year: ${expense.dateTime}")
+            }
         }
+
+        val yearAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            uniqueYears.toList().sortedWith(compareBy { yearString ->
+                if (yearString.equals("none", ignoreCase = true)) Int.MIN_VALUE // "None" first
+                else yearString.toIntOrNull() ?: Int.MAX_VALUE // Sort numerically
+            })
+        )
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        yearSpinner.adapter = yearAdapter
 
         yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
