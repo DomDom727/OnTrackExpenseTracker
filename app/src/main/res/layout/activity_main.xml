@@ -16,7 +16,7 @@
         android:gravity="center"
         android:text="Welcome"
         android:textColor="@color/card_background"
-        android:textSize="32sp"
+        android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         android:gravity="center"
         android:text="OnTrack Expenses"
         android:textColor="#01AA6F"
-        android:textSize="32sp"
+        android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -180,10 +180,11 @@
         android:id="@+id/profile_btn"
         android:layout_width="52dp"
         android:layout_height="52dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/outline_person_24"
         android:contentDescription="Profile"
         app:layout_constraintEnd_toStartOf="@+id/welcome_tv"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -191,10 +192,11 @@
         android:id="@+id/newtransaction_btn"
         android:layout_width="52dp"
         android:layout_height="52dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/baseline_add_circle_outline_24"
         android:contentDescription="Add Expense"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toEndOf="@+id/welcome_tv"
         app:layout_constraintTop_toTopOf="parent" />
 
