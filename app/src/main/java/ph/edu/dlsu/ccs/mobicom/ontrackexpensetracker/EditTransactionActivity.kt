@@ -30,6 +30,9 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
 import java.util.Date
 import android.Manifest
+import android.widget.TextView
+import androidx.compose.ui.semantics.setSelection
+import androidx.compose.ui.semantics.setText
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -38,8 +41,18 @@ import org.json.JSONObject
 import java.io.IOException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import kotlin.math.exp
 
-class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
+class EditTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
+
+    companion object {
+        const val EXTRA_EXPENSE_ID = "extra_expense_id"
+        const val EXTRA_EXPENSE_NAME = "extra_expense_name"
+        const val EXTRA_EXPENSE_AMOUNT = "extra_expense_amount"
+        const val EXTRA_EXPENSE_CATEGORY = "extra_expense_category"
+        const val EXTRA_EXPENSE_DATE_TIME = "extra_expense_date_time"
+        const val EXTRA_EXPENSE_NOTES = "extra_expense_notes"
+    }
 
     private lateinit var nameEditText: EditText
     private lateinit var amountEditText: EditText
@@ -78,8 +91,15 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         scanButton = findViewById(R.id.scan_btn)
         notesEditText = findViewById(R.id.editTextTextMultiLine2)
 
+        findViewById<TextView>(R.id.title_tv).text = "Edit Expense"
+        val initialName = intent.getStringExtra(EXTRA_EXPENSE_NAME) ?: ""
+        val initialAmount = intent.getDoubleExtra(EXTRA_EXPENSE_AMOUNT, 0.0).toString()
+        val initialCategory = intent.getStringExtra(EXTRA_EXPENSE_CATEGORY) ?: ""
+        val initialDate = intent.getStringExtra(EXTRA_EXPENSE_DATE_TIME) ?: ""
+        val initialNotes = intent.getStringExtra(EXTRA_EXPENSE_NOTES) ?: ""
+
         requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            isGranted ->
+                isGranted ->
             if (isGranted) {
                 captureImage()
             } else {
@@ -88,7 +108,7 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         }
 
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
-            success ->
+                success ->
             if (success) {
                 currentPhotoPath?.let { path ->
                     val bitmap = BitmapFactory.decodeFile(path)
@@ -108,6 +128,17 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
 
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerAdapter
+
+        nameEditText.setText(initialName)
+        amountEditText.setText(initialAmount)
+        dateEditText.setText(initialDate)
+        notesEditText.setText(initialNotes)
+
+        val categoryPosition = categories.indexOf(initialCategory)
+        if (categoryPosition >= 0) {
+            spinner.setSelection(categoryPosition)
+            categoryString = initialCategory // Initialize selectedCategoryString
+        }
 
         val backButton: Button = findViewById(R.id.back_btn)
         backButton.setOnClickListener {
@@ -244,6 +275,7 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
     }
 
     private fun addTransactionAndProceed() {
+        val expenseId = intent.getStringExtra(EXTRA_EXPENSE_ID)
         val name = nameEditText.text.toString().trim()
         val amountStr = amountEditText.text.toString().trim()
         val category = categoryString
@@ -291,6 +323,7 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         val userId = currentFirebaseUser.uid
 
         val expense = Expense(
+            id = expenseId,
             userId = userId,
             name = name,
             amount = amount,
@@ -300,11 +333,11 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         )
 
         lifecycleScope.launch {
-            val expenseId = expenseRepository.addExpense(expense)
+            val success = expenseRepository.updateExpense(expense)
 
-            if (expenseId != null) {
-                Toast.makeText(this@AddTransactionActivity, "Expense added successfully", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this@AddTransactionActivity, ViewTransactionActivity::class.java).apply {
+            if (success) {
+                Toast.makeText(this@EditTransactionActivity, "Expense updated successfully", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@EditTransactionActivity, ViewTransactionActivity::class.java).apply {
                     // Pass data that ViewTransactionActivity expects.
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_ID, expenseId)
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NAME, name)
@@ -312,12 +345,11 @@ class AddTransactionActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_CATEGORY, category)
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_DATE_TIME, date)
                     putExtra(ViewTransactionActivity.EXTRA_EXPENSE_NOTES, notes)
-
                 }
                 startActivity(intent)
                 finish() // Finish AddTransactionActivity
             } else {
-                Toast.makeText(this@AddTransactionActivity, "Failed to add expense", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@EditTransactionActivity, "Failed to update expense", Toast.LENGTH_SHORT).show()
             }
         }
 
