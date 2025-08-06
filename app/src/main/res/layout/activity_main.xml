@@ -204,7 +204,7 @@
         android:id="@+id/camera_btn"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="18dp"
         android:background="@drawable/filled_camera_custom"
         android:contentDescription="Camera"
         android:elevation="8dp"
