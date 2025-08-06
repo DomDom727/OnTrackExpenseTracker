@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">OnTrack Expense Tracker</string>
     <string name="login">Login</string>
+    <string name="Username">Username</string>
     <string name="Email">Email</string>
     <string name="AppName">OnTrack</string>
     <string name="Password">Password</string>

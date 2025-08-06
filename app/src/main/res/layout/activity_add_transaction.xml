@@ -60,7 +60,7 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="21dp"
                 android:background="@drawable/filled_camera_custom"
-                android:contentDescription="Scan Picture of Reciept"
+                android:contentDescription="Scan Picture of Receipt"
                 android:textColor="@android:color/transparent"
                 app:layout_constraintStart_toEndOf="@+id/parameter6"
                 app:layout_constraintTop_toTopOf="parent" />
