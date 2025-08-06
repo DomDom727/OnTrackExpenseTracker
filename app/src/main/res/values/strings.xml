@@ -38,6 +38,12 @@
     <string name="notes">Notes:</string>
     <string name="scan_receipt">Scan Receipt:</string>
     <string name="scan_picture_of_receipt">Scan Picture of Receipt</string>
+    <string name="ontrack_expenses">OnTrack Expenses</string>
+    <string name="welcome">Welcome</string>
+    <string name="camera">Camera</string>
+    <string name="profile">Profile</string>
+    <string name="transactions">Transactions</string>
+    <string name="insights">Insights</string>
 
     <string-array name="categories">
         <item>Food</item>
