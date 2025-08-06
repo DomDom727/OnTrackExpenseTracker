@@ -12,7 +12,7 @@
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username"
+        android:text="@string/Username"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -27,6 +27,7 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:background="@drawable/blk_rounded_button"
+        android:contentDescription="@string/notif_row"
         android:padding="16dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
@@ -45,7 +46,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Notifications"
+            android:text="@string/notifications"
             android:textColor="#FFFFFF"
             android:layout_marginStart="12dp"
             android:textSize="16sp"/>
@@ -54,7 +55,8 @@
             android:id="@+id/notificationBadge"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:text="1"
+            android:contentDescription="@string/notif_count"
+            android:text="@string/_1"
             android:background="@drawable/badge_background"
             android:textColor="#FFFFFF"
             android:gravity="center"
@@ -92,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Edit Profile"
+            android:text="@string/edit_profile"
             android:textColor="#FFFFFF"
             android:layout_marginStart="12dp"
             android:textSize="16sp"/>
@@ -101,7 +103,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/ic_arrow_right"
-            android:tint="#4CAF50" />
+            app:tint="#4CAF50" />
     </LinearLayout>
 
     <!-- Change Password Row -->
@@ -130,7 +132,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Change Password"
+            android:text="@string/change_password"
             android:textColor="#FFFFFF"
             android:layout_marginStart="12dp"
             android:textSize="16sp"/>
@@ -147,7 +149,7 @@
         android:id="@+id/signOutText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign Out"
+        android:text="@string/sign_out"
         android:textColor="#FF5252"
         android:textStyle="bold"
         android:textSize="16sp"
