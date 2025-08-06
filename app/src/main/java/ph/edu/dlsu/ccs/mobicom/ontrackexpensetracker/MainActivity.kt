@@ -39,9 +39,9 @@ import com.patrykandpatrick.vico.views.cartesian.CartesianChartView
 import android.graphics.Color // For setting colors programmatically if needed
 import android.graphics.Typeface
 import android.util.Log
+import androidx.compose.animation.core.copy
 import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.lifecycleScope
-//import androidx.privacysandbox.tools.core.generator.build
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 //import com.patrykandpatrick.vico.core.cartesian.axis.AxisPosition
 import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
@@ -63,6 +63,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var data: ArrayList<Expense>
     private lateinit var expenseRepository: ExpenseRepository
 
+    private val BottomAxisLabelKey = ExtraStore.Key<List<String>>()
+
     companion object {
         const val  EXTRA_TRIGGER_SCAN = "ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.TRIGGER_SCAN"
     }
@@ -75,20 +77,41 @@ class MainActivity : AppCompatActivity() {
         expenseRepository = ExpenseRepository()
         data = ArrayList()
         chartView = findViewById(R.id.chart_view)
+
+
+        val bottomAxisValueFormatter = CartesianValueFormatter{ context, x, _ ->
+            context.model.extraStore[BottomAxisLabelKey][x.toInt()]
+        }
+
+        with(chartView) {
+            chart =
+                chart!!.copy(
+                    bottomAxis =
+                        (chart!!.bottomAxis as HorizontalAxis).copy(
+                            valueFormatter = bottomAxisValueFormatter
+                        )
+                )
+            //this.modelProducer = modelProducer
+        }
         chartView.modelProducer = modelProducer
 
         lifecycleScope.launch {
             val fetchedData = expenseRepository.getExpenses()
             data.clear()
             data.addAll(fetchedData)
-            val aggregatedData = aggregateExpensesByMonth(data)
-            val monthlyTotals = getMonthlyTotalsForChart(aggregatedData)
-            val monthLabels = getMonthLabelsForChart(aggregatedData)
-            if (monthlyTotals.isNotEmpty()) {
+            val aggregatedData: Map<String, Double> = aggregateExpensesByMonth(fetchedData)
+            // val monthlyTotals = getMonthlyTotalsForChart(aggregatedData)
+            // val monthLabels = getMonthLabelsForChart(aggregatedData)
+
+
+            if (aggregatedData.isNotEmpty()) {
                 modelProducer.runTransaction {
+                    val monthLabels = aggregatedData.keys.toList()
+                    val monthlyTotals = aggregatedData.values.toList()
                     columnSeries { series(monthlyTotals) }
+                    extras { it[BottomAxisLabelKey] = monthLabels }
                 }
-                //updateChart()
+
             }
         }
 
@@ -128,7 +151,8 @@ class MainActivity : AppCompatActivity() {
     private fun aggregateExpensesByMonth(expenses: List<Expense>): Map<String, Double> {
         val monthlyExpenses = mutableMapOf<String, Double>()
         val inputFormatter = SimpleDateFormat("yyyy-MM-dd", getDefault())
-        val monthYearFormatter = SimpleDateFormat("MMMM yyyy", getDefault())
+        val monthYearFormatter = SimpleDateFormat("MMM yyyy", getDefault())
+        // val monthlyExpensesAggregator = mutableMapOf<String, Double>()
         for (expense in expenses) {
             try {
                 val date = inputFormatter.parse(expense.dateTime)
@@ -140,7 +164,25 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Error parsing date: ${e.message}")
             }
         }
-        return monthlyExpenses.toSortedMap()
+
+        val entriesToSort = monthlyExpenses.entries.mapNotNull { entry ->
+            try {
+                val dateFromKey = monthYearFormatter.parse(entry.key)
+                if (dateFromKey!= null) {
+                    Pair(dateFromKey, entry)
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                null
+            }
+        }
+        val sortedByDate = entriesToSort.sortedByDescending { it.first }
+        val result = LinkedHashMap<String, Double>()
+        for ((_, originalEntry) in sortedByDate) {
+            result[originalEntry.key] = originalEntry.value
+        }
+        return result
     }
 
     private fun getMonthlyTotalsForChart(monthlyAggregatedExpenses: Map<String, Double>): List<Number> {
