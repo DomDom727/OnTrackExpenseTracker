@@ -39,9 +39,11 @@ import com.patrykandpatrick.vico.views.cartesian.CartesianChartView
 import android.graphics.Color // For setting colors programmatically if needed
 import android.graphics.Typeface
 import android.util.Log
+import android.widget.TextView
 import androidx.compose.animation.core.copy
 import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 //import com.patrykandpatrick.vico.core.cartesian.axis.AxisPosition
 import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
@@ -62,6 +64,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var chartView: CartesianChartView
     private lateinit var data: ArrayList<Expense>
     private lateinit var expenseRepository: ExpenseRepository
+    private lateinit var usernameTextView: TextView
+    private lateinit var auth: FirebaseAuth
 
     private val BottomAxisLabelKey = ExtraStore.Key<List<String>>()
 
@@ -73,6 +77,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        auth = FirebaseAuth.getInstance()
+
+        // Username Logic
+        usernameTextView = findViewById(R.id.user_tv)
+
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            // Check if the user has a display name, otherwise use the email
+            val displayName = currentUser.displayName
+            if (displayName != null && displayName.isNotEmpty()) {
+                usernameTextView.text = displayName.trim()
+            } else {
+                // Fallback to displaying the user's email if no display name is set
+                usernameTextView.text = currentUser.email.toString().trim()
+            }
+        }
 
         expenseRepository = ExpenseRepository()
         data = ArrayList()

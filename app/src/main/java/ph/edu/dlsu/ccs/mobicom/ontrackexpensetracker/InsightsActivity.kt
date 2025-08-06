@@ -18,8 +18,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import com.patrykandpatrick.vico.views.cartesian.CartesianChartView
 import kotlinx.coroutines.launch
 import ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker.R
@@ -29,14 +32,15 @@ import kotlin.text.format
 import java.util.Locale
 import java.util.Locale.getDefault
 import kotlin.text.append
+import java.util.Calendar
 
 class InsightsActivity : AppCompatActivity() {
     private lateinit var data: ArrayList<Expense>
     private lateinit var expenseRepository: ExpenseRepository
 
-    private var categoryString: String? = null
-    private var monthString: String? = null
-    private var yearString: String? = null
+    private var categoryString: String? = "none"
+    private var monthString: String? = "none"
+    private var yearString: String? = "none"
 
     private lateinit var categorySpinner: Spinner
     private lateinit var monthSpinner: Spinner
@@ -44,6 +48,7 @@ class InsightsActivity : AppCompatActivity() {
 
     val modelProducer = CartesianChartModelProducer()
     private lateinit var chartView: CartesianChartView
+    private val BottomAxisLabelKey = ExtraStore.Key<List<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +57,20 @@ class InsightsActivity : AppCompatActivity() {
         expenseRepository = ExpenseRepository()
         data = ArrayList()
         chartView = findViewById(R.id.chart_view)
+        val bottomAxisValueFormatter = CartesianValueFormatter{ context, x, _ ->
+            context.model.extraStore[BottomAxisLabelKey][x.toInt()]
+        }
+
+        with(chartView) {
+            chart =
+                chart!!.copy(
+                    bottomAxis =
+                        (chart!!.bottomAxis as HorizontalAxis).copy(
+                            valueFormatter = bottomAxisValueFormatter
+                        )
+                )
+            //this.modelProducer = modelProducer
+        }
         chartView.modelProducer = modelProducer
 
         categorySpinner = findViewById(R.id.filterCategoriesSpinner)
@@ -62,16 +81,19 @@ class InsightsActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val fetchedData = expenseRepository.getExpenses()
+            val filteredData = filterData(fetchedData)
             data.clear()
-            data.addAll(fetchedData)
+            data.addAll(filteredData)
             val aggregatedData = aggregateExpensesByMonth(data)
-            val monthlyTotals = getMonthlyTotalsForChart(aggregatedData)
-            val monthLabels = getMonthLabelsForChart(aggregatedData)
-            if (monthlyTotals.isNotEmpty()) {
+            // val monthlyTotals = getMonthlyTotalsForChart(aggregatedData)
+            // val monthLabels = getMonthLabelsForChart(aggregatedData)
+            if (aggregatedData.isNotEmpty()) {
                 modelProducer.runTransaction {
+                    val monthLabels = aggregatedData.keys.toList()
+                    val monthlyTotals = aggregatedData.values.toList()
                     columnSeries { series(monthlyTotals) }
+                    extras { it[BottomAxisLabelKey] = monthLabels }
                 }
-                //updateChart()
             }
         }
 
@@ -106,7 +128,7 @@ class InsightsActivity : AppCompatActivity() {
                 categoryString = parent.getItemAtPosition(position).toString()
                 // Optionally, trigger data filtering or UI update here
                 // Toast.makeText(this@InsightsActivity, "Category: $categoryString", Toast.LENGTH_SHORT).show()
-                // filterAndDisplayData()
+                displayFilteredData()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -129,7 +151,7 @@ class InsightsActivity : AppCompatActivity() {
                 monthString = parent.getItemAtPosition(position).toString()
                 // Optionally, trigger data filtering or UI update here
                 // Toast.makeText(this@InsightsActivity, "Month: $monthString", Toast.LENGTH_SHORT).show()
-                // filterAndDisplayData()
+                displayFilteredData()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -152,7 +174,7 @@ class InsightsActivity : AppCompatActivity() {
                 yearString = parent.getItemAtPosition(position).toString()
                 // Optionally, trigger data filtering or UI update here
                 // Toast.makeText(this@InsightsActivity, "Year: $yearString", Toast.LENGTH_SHORT).show()
-                // filterAndDisplayData()
+                displayFilteredData()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -161,27 +183,74 @@ class InsightsActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterAndDisplayData() {
+    private fun filterData(expensesToFilter: List<Expense>): List<Expense> {
+        val inputFormatter = SimpleDateFormat("yyyy-MM-dd", getDefault())
+        return expensesToFilter.filter { expense ->
+            var matchesCategory = true
+            var matchesMonth = true
+            var matchesYear = true
 
-        val filteredList = data.filter { expense ->
-            val categoryMatch = categoryString == "All Categories" || categoryString == null || expense.category == categoryString
+            // Filter by Category
+            if (categoryString != null && categoryString != "none") {
+                matchesCategory = expense.category.equals(categoryString, ignoreCase = true)
+            }
 
-            val expenseDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(expense.dateTime)
+            // Parse expense date for month and year filtering
+            val expenseDate = try {
+                inputFormatter.parse(expense.dateTime)
+            } catch (e: Exception) {
+                Log.e("InsightsActivity", "Error parsing expense date: ${expense.dateTime}", e)
+                null
+            }
 
-            val expenseMonth = expenseDate?.let { SimpleDateFormat("MMMM", Locale.getDefault()).format(it) }
-            val monthMatch = monthString == "All Months" || monthString == null || expenseMonth == monthString
+            if (expenseDate != null) {
+                val calendar = Calendar.getInstance()
+                calendar.time = expenseDate
 
-            val expenseYear = expenseDate?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) }
-            val yearMatch = yearString == "All Years" || yearString == null || expenseYear == yearString
+                // Filter by Month
+                if (monthString != null && monthString != "none") {
+                    val expenseMonth = SimpleDateFormat("MMMM", getDefault()).format(calendar.time)
+                    matchesMonth = expenseMonth.equals(monthString, ignoreCase = true)
+                }
 
-            categoryMatch && monthMatch && yearMatch
+                // Filter by Year
+                if (yearString != null && yearString != "none") {
+                    val expenseYear = calendar.get(Calendar.YEAR).toString()
+                    matchesYear = expenseYear == yearString
+                }
+            } else {
+                // If date can't be parsed, it doesn't match month/year filters unless they are "none"
+                matchesMonth = (monthString == "none")
+                matchesYear = (yearString == "none")
+            }
+            matchesCategory && matchesMonth && matchesYear
+        }
+    }
+
+    private fun displayFilteredData() {
+        lifecycleScope.launch {
+            val fetchedData = expenseRepository.getExpenses()
+            val filteredData = filterData(fetchedData)
+            data.clear()
+            data.addAll(filteredData)
+            val aggregatedData = aggregateExpensesByMonth(data)
+
+            if (aggregatedData.isNotEmpty()) {
+                modelProducer.runTransaction {
+                    val monthLabels = aggregatedData.keys.toList()
+                    val monthlyTotals = aggregatedData.values.toList()
+                    columnSeries { series(monthlyTotals) }
+                    extras { it[BottomAxisLabelKey] = monthLabels }
+                }
+            }
         }
     }
 
     private fun aggregateExpensesByMonth(expenses: List<Expense>): Map<String, Double> {
         val monthlyExpenses = mutableMapOf<String, Double>()
         val inputFormatter = SimpleDateFormat("yyyy-MM-dd", getDefault())
-        val monthYearFormatter = SimpleDateFormat("MMMM yyyy", getDefault())
+        val monthYearFormatter = SimpleDateFormat("MMM yyyy", getDefault())
+        // val monthlyExpensesAggregator = mutableMapOf<String, Double>()
         for (expense in expenses) {
             try {
                 val date = inputFormatter.parse(expense.dateTime)
@@ -193,7 +262,25 @@ class InsightsActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Error parsing date: ${e.message}")
             }
         }
-        return monthlyExpenses.toSortedMap()
+
+        val entriesToSort = monthlyExpenses.entries.mapNotNull { entry ->
+            try {
+                val dateFromKey = monthYearFormatter.parse(entry.key)
+                if (dateFromKey!= null) {
+                    Pair(dateFromKey, entry)
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                null
+            }
+        }
+        val sortedByDate = entriesToSort.sortedByDescending { it.first }
+        val result = LinkedHashMap<String, Double>()
+        for ((_, originalEntry) in sortedByDate) {
+            result[originalEntry.key] = originalEntry.value
+        }
+        return result
     }
 
     private fun getMonthlyTotalsForChart(monthlyAggregatedExpenses: Map<String, Double>): List<Number> {
