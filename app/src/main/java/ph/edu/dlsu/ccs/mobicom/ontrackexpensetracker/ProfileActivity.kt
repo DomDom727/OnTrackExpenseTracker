@@ -6,15 +6,18 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import androidx.activity.result.contract.ActivityResultContracts
+import android.app.Activity
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var editProfileRow: LinearLayout
     private lateinit var changePasswordRow: LinearLayout
     private lateinit var usernameTextView: TextView
     private lateinit var signOutText: TextView
 
     companion object {
-        private const val TAG = "ProfileActivity" // Changed the TAG for clarity
+        private const val TAG = "ProfileActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,32 +27,24 @@ class ProfileActivity : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Username Logic
+        // Initialize TextView
         usernameTextView = findViewById(R.id.usernameTextView)
 
-        val currentUser = auth.currentUser
-
-        if (currentUser != null) {
-            // Check if the user has a display name, otherwise use the email
-            val displayName = currentUser.displayName
-            if (displayName != null && displayName.isNotEmpty()) {
-                usernameTextView.text = displayName
-            } else {
-                // Fallback to displaying the user's email if no display name is set
-                usernameTextView.text = currentUser.email
-            }
+        // Set up click listeners for the rows
+        editProfileRow = findViewById(R.id.editProfileRow)
+        editProfileRow.setOnClickListener {
+            val intent = Intent(this, EditProfileActivity::class.java)
+            startActivity(intent)
         }
 
-        // Change Password Logic
         changePasswordRow = findViewById(R.id.changePasswordRow)
         changePasswordRow.setOnClickListener {
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         }
 
-        // Sign Out Logic
+        // Set up click listener for Sign Out
         signOutText = findViewById(R.id.signOutText)
-
         signOutText.setOnClickListener {
             auth.signOut()
 
@@ -58,6 +53,27 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        // This function will be called whenever ProfileActivity comes to the foreground,
+        // ensuring the username is always up-to-date.
+        updateUserProfileUI()
+    }
+
+    /**
+     * A helper function to load and display the user's profile information.
+     */
+    private fun updateUserProfileUI() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val displayName = currentUser.displayName
+            if (displayName != null && displayName.isNotEmpty()) {
+                usernameTextView.text = displayName
+            } else {
+                usernameTextView.text = currentUser.email
+            }
+        }
     }
 }
