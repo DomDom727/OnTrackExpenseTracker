@@ -69,7 +69,7 @@ class ExpenseRepository {
 
     suspend fun updateExpense(expense: Expense): Boolean {
         if (expense.id == null || expense.userId == null) {
-            Log.e(TAG, "Invalid expense object")
+            Log.e(TAG, "Invalid expense object: expense.id is '${expense.id}' and expense.userId is '${expense.userId}'")
             return false
         }
         val docRef = db.collection(USERS_COLLECTION)

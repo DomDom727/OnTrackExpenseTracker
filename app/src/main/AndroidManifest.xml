@@ -57,6 +57,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".TransactionsActivity" />
+        <activity
+            android:name=".EditTransactionActivity"
+            android:exported="false" />
         
         <provider
             android:authorities="${applicationId}.provider"
