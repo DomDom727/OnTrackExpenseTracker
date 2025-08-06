@@ -1,5 +1,6 @@
 package ph.edu.dlsu.ccs.mobicom.ontrackexpensetracker
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -45,23 +46,35 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Loads the current user's display name and email from Firebase Auth
-     * and populates the EditText fields.
-     */
+    override fun onResume() {
+        super.onResume()
+        reloadAndLoadUserProfile()
+    }
+
+    private fun reloadAndLoadUserProfile() {
+        val user = auth.currentUser
+        if (user != null) {
+            user.reload().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val latestUser = auth.currentUser
+                    usernameInput.setText(latestUser?.displayName)
+                    emailInput.setText(latestUser?.email)
+                } else {
+                    Log.e("EditProfileActivity", "Failed to reload user profile.", task.exception)
+                    loadUserProfile()
+                }
+            }
+        }
+    }
+
     private fun loadUserProfile() {
         val user = auth.currentUser
         if (user != null) {
-            // Populate the username field with the user's display name
             usernameInput.setText(user.displayName)
-            // Populate the email field
             emailInput.setText(user.email)
         }
     }
 
-    /**
-     * Saves the new display name and/or email to the user's Firebase Auth profile.
-     */
     private fun saveUserProfile() {
         val user = auth.currentUser
 
@@ -85,12 +98,41 @@ class EditProfileActivity : AppCompatActivity() {
             return
         }
 
-        // Handle both updates with separate flows to ensure both can be saved independently
-        var profileUpdateCompleted = false
-        var emailUpdateCompleted = false
+        var tasksToComplete = 0
+        var tasksCompleted = 0
+        var allTasksSuccessful = true
 
-        // Update display name if it has changed
+        val onTaskComplete = { success: Boolean ->
+            tasksCompleted++
+            if (!success) {
+                allTasksSuccessful = false
+            }
+
+            if (tasksCompleted == tasksToComplete) {
+                if (allTasksSuccessful) {
+                    // Check if an email change was part of the updates
+                    if (isEmailChanged) {
+                        // Sign out the user and go to the login screen
+                        auth.signOut()
+                        Toast.makeText(this, "Profile updated. Please log in again with your new email.", Toast.LENGTH_LONG).show()
+                        val intent = Intent(this, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        // Only display name was changed, just finish the activity
+                        Toast.makeText(this, "Display name updated successfully!", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                } else {
+                    // One or more tasks failed, just finish the activity
+                    finish()
+                }
+            }
+        }
+
         if (isDisplayNameChanged) {
+            tasksToComplete++
             val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(newDisplayName)
                 .build()
@@ -98,40 +140,30 @@ class EditProfileActivity : AppCompatActivity() {
             user.updateProfile(profileUpdates)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this, "Display name updated successfully!", Toast.LENGTH_SHORT).show()
+                        onTaskComplete(true)
                     } else {
-                        Toast.makeText(this, "Failed to update display name.", Toast.LENGTH_SHORT).show()
                         Log.e("EditProfileActivity", "Failed to update display name", task.exception)
+                        onTaskComplete(false)
                     }
-                    profileUpdateCompleted = true
-                    checkCompletion(isDisplayNameChanged, isEmailChanged, profileUpdateCompleted, emailUpdateCompleted)
                 }
         }
 
-        // Update email if it has changed
         if (isEmailChanged) {
+            tasksToComplete++
             user.verifyBeforeUpdateEmail(newEmail)
                 .addOnCompleteListener { emailTask ->
                     if (emailTask.isSuccessful) {
-                        Toast.makeText(this, "Email update request sent. Please verify.", Toast.LENGTH_LONG).show()
+                        // The onTaskComplete lambda will now handle the sign-out logic
+                        onTaskComplete(true)
                     } else {
-                        Toast.makeText(this, "Failed to update email. Please re-authenticate.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Failed to send verification email. Please re-authenticate.", Toast.LENGTH_LONG).show()
                         Log.e("EditProfileActivity", "Failed to update email", emailTask.exception)
+                        onTaskComplete(false)
                     }
-                    emailUpdateCompleted = true
-                    checkCompletion(isDisplayNameChanged, isEmailChanged, profileUpdateCompleted, emailUpdateCompleted)
                 }
         }
-    }
 
-    private fun checkCompletion(
-        isDisplayNameChanged: Boolean,
-        isEmailChanged: Boolean,
-        profileUpdateCompleted: Boolean,
-        emailUpdateCompleted: Boolean
-    ) {
-        if ((!isDisplayNameChanged || profileUpdateCompleted) && (!isEmailChanged || emailUpdateCompleted)) {
-            // All necessary updates have been attempted.
+        if (tasksToComplete == 0) {
             finish()
         }
     }
